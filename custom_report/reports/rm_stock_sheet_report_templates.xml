@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- RM Stock Sheet PDF template (fixed: no &nbsp; entities) -->
+    <template id="report_rm_stock_sheet_document">
+        <t t-call="web.html_container">
+
+            <!-- Get first line to read common header info -->
+            <t t-set="first" t-value="docs and docs[0] or False"/>
+            <t t-set="report_date" t-value="first and first.date or False"/>
+            <t t-set="party_name" t-value="first and (first.party_id.name or 'ALL') or 'ALL'"/>
+            <t t-set="rm_type_val" t-value="first and (first.rm_type or 'ALL') or 'ALL'"/>
+            <t t-set="location_name" t-value="first and (first.location_id.display_name or 'ALL') or 'ALL'"/>
+
+            <!-- HEADER IMAGE -->
+            <div class="page">
+                <div style="text-align:center; margin-bottom:10px;">
+                    <t t-if="company.report_header">
+                        <img t-att-src="'data:image/png;base64,%s' % company.report_header"
+                             style="max-height:120px; width:100%; object-fit:contain;"/>
+                    </t>
+                </div>
+
+                <!-- TITLE + TOP INFO (like your sample) -->
+                <h3 style="text-align:center; margin-bottom:6px;">
+                    RM STOCK (Stores) - RM STOCK SHEET
+                </h3>
+
+                <div style="font-size:12px; margin-bottom:8px;">
+                    <strong>Date:</strong>
+                    <t t-esc="report_date or ''"/>
+                    <t t-raw="&#160;&#160;&#160;"/>
+                    <strong>RM Type:</strong>
+                    <t t-esc="rm_type_val"/>
+                    <t t-raw="&#160;&#160;&#160;"/>
+                    <strong>Location:</strong>
+                    <t t-esc="location_name"/>
+                    <t t-raw="&#160;&#160;&#160;"/>
+                    <strong>Party:</strong>
+                    <t t-esc="party_name"/>
+                </div>
+
+                <!-- MAIN TABLE -->
+                <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                    <thead>
+                        <tr style="background:#f0f0f0;">
+                            <th style="border:1px solid #000; padding:4px;">Date</th>
+                            <th style="border:1px solid #000; padding:4px;">Party</th>
+                            <th style="border:1px solid #000; padding:4px;">Location</th>
+                            <th style="border:1px solid #000; padding:4px;">RM Type</th>
+                            <th style="border:1px solid #000; padding:4px;">RM Grade</th>
+                            <th style="border:1px solid #000; padding:4px;">MFI</th>
+                            <th style="border:1px solid #000; padding:4px;">Product</th>
+                            <th style="border:1px solid #000; padding:4px;">Batch</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right;">Bag</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right;">KGS</th>
+                            <th style="border:1px solid #000; padding:4px; text-align:right;">TOTAL KG</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="total_bag" t-value="0.0"/>
+                        <t t-set="total_kgs" t-value="0.0"/>
+                        <t t-set="grand_total_kgs" t-value="0.0"/>
+
+                        <t t-foreach="docs" t-as="l">
+                            <tr>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.date or ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.party_id.name if l.party_id else ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.location_id.display_name if l.location_id else ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.rm_type or ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.grade or ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px; text-align:right;">
+                                    <t t-esc="l.mfi or ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.product_id.display_name if l.product_id else ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px;">
+                                    <t t-esc="l.batch or ''"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px; text-align:right;">
+                                    <t t-esc="('%.3f' % (l.bag_qty or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px; text-align:right;">
+                                    <t t-esc="('%.3f' % (l.kgs or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                                <td style="border:1px solid #aaa; padding:3px; text-align:right;">
+                                    <t t-esc="('%.3f' % (l.total_kgs or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                            </tr>
+
+                            <t t-set="total_bag" t-value="total_bag + (l.bag_qty or 0.0)"/>
+                            <t t-set="total_kgs" t-value="total_kgs + (l.kgs or 0.0)"/>
+                            <t t-set="grand_total_kgs" t-value="grand_total_kgs + (l.total_kgs or 0.0)"/>
+                        </t>
+                    </tbody>
+
+                    <tfoot>
+                        <tr>
+                            <td colspan="8" style="border:1px solid #000; padding:4px; text-align:right;">
+                                <strong>Grand Total:</strong>
+                            </td>
+                            <td style="border:1px solid #000; padding:4px; text-align:right;">
+                                <strong>
+                                    <t t-esc="('%.3f' % total_bag).rstrip('0').rstrip('.')"/>
+                                </strong>
+                            </td>
+                            <td style="border:1px solid #000; padding:4px; text-align:right;">
+                                <strong>
+                                    <t t-esc="('%.3f' % total_kgs).rstrip('0').rstrip('.')"/>
+                                </strong>
+                            </td>
+                            <td style="border:1px solid #000; padding:4px; text-align:right;">
+                                <strong>
+                                    <t t-esc="('%.3f' % grand_total_kgs).rstrip('0').rstrip('.')"/>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <!-- FOOTER IMAGE -->
+                <div style="margin-top:18px; text-align:center;">
+                    <t t-if="company.report_footer">
+                        <img t-att-src="'data:image/png;base64,%s' % company.report_footer"
+                             style="max-height:120px; width:100%; object-fit:contain;"/>
+                    </t>
+                </div>
+            </div> <!-- /page -->
+        </t>
+    </template>
+
+    <!-- Report action -->
+    <report
+        id="action_report_rm_stock_sheet"
+        model="rm.stock.sheet.report"
+        string="RM Stock Sheet (PDF)"
+        report_type="qweb-pdf"
+        name="custom_report.report_rm_stock_sheet_document"
+        file="custom_report.report_rm_stock_sheet_document"
+        print_report_name="'RM_Stock_Sheet_%s' % (time.strftime('%Y%m%d'))"
+    />
+</odoo>

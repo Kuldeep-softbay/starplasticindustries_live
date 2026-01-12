@@ -1,0 +1,69 @@
+<odoo>
+  <data>
+    <record id="view_mrp_workcenter_form_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.workcenter.form.inherit.starplastic</field>
+      <field name="model">mrp.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_workcenter_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="outgoing_job"/>
+        </xpath>
+        <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="string">Machine Name</attribute>
+        </xpath>
+        <xpath expr="//field[@name='tag_ids']" position="replace">
+            <field name="machine_type"/>
+        </xpath>
+        <xpath expr="//field[@name='alternative_workcenter_ids']" position="replace">
+                <field name="remark"/>
+        </xpath>
+        <xpath expr="//field[@name='code']" position="replace">
+                <field name="max_power"/>
+        </xpath>
+        <xpath expr="//field[@name='company_id']" position="replace">
+                <field name="machine_no"/>
+        </xpath>
+        <xpath expr="//field[@name='company_id']" position="after">
+                <field name="company_name"/>
+        </xpath>
+        <xpath expr="//field[@name='company_id']" position="after">
+            <field name="location_id"/>
+        </xpath>
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="machine_shift"/>
+        </xpath>
+         <xpath expr="//field[@name='company_id']" position="after">
+                <field name="capacity_ton"/>
+        </xpath>
+        <xpath expr="//field[@name='resource_calendar_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="view_mrp_workcenter_tree_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.workcenter.list.inherit.starplastic</field>
+      <field name="model">mrp.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_workcenter_tree_view"/>
+      <field name="arch" type="xml">
+      <xpath expr="//list/field[@name='name']" position="before">
+          <field name="machine_no" optional="show"/>
+        </xpath>
+        <xpath expr="//list/field[@name='name']" position="after">
+          <field name="machine_type" optional="show"/>
+          <field name="capacity_ton" optional="show"/>
+          <field name="location_id" optional="show"/>
+          <field name="remark" optional="show"/>
+          <field name="company_name" optional="show"/>
+          <field name="max_power" optional="show"/>
+          <field name="machine_shift" optional="show"/>
+        </xpath>
+      </field>
+    </record>
+
+
+    <record id="mrp.mrp_workcenter_kanban_action" model="ir.actions.act_window">
+      <field name="name">Machine overview</field>
+    </record>
+  </data>
+</odoo>

@@ -1,0 +1,52 @@
+<odoo>
+    <record id="res_partner_form_hide_vendor" model="ir.ui.view">
+        <field name="name">res.partner.form.hide.vendor</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+        <xpath expr="//group[@name='purchase']" position="attributes">
+                <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//group[@name='misc']" position="attributes">
+                <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//page[@name='internal_notes']" position="attributes">
+                <attribute name="string">Packing Details</attribute>
+        </xpath>
+        <notebook position="inside">
+                <page string="Party Master">
+
+                    <group>
+                        <group string="Primary Contact">
+                            <field name="primary_contact_person"/>
+                            <field name="primary_contact_no"/>
+                            <field name="primary_email"/>
+                        </group>
+
+                        <group string="Secondary Contact">
+                            <field name="secondary_contact_person"/>
+                            <field name="secondary_contact_no"/>
+                            <field name="secondary_email"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Packing Details">
+                            <field name="packing_method"/>
+                            <field name="packing_details_qty"/>
+                        </group>
+
+                        <group string="Transport">
+                            <field name="transport_details"/>
+                        </group>
+                    </group>
+
+                    <group string="Product Details">
+                        <field name="product_details_ids" widget="many2many_tags"/>
+                    </group>
+
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_purchase_monthly_report" model="ir.actions.act_window">
+    <field name="name">Purchase Monthly Stock Report</field>
+    <field name="res_model">purchase.monthly.report</field>
+    <field name="view_mode">list,pivot,graph,search</field>
+    <field name="context">
+        {'search_default_current_month': 1}
+    </field>
+    </record>
+
+<menuitem id="menu_purchase_monthly_report"
+              name="Purchase Monthly Stock Report"
+              parent="purchase.purchase_report_main"
+              action="action_purchase_monthly_report"/>
+    <!-- Inherit Purchase Analysis list view -->
+    <record id="view_purchase_monthly_report_tree" model="ir.ui.view">
+    <field name="name">purchase.monthly.report.list</field>
+    <field name="model">purchase.monthly.report</field>
+    <field name="arch" type="xml">
+        <list>
+            <!-- <field name="month" optional="hide"/> -->
+            <field name="product_tmpl_id" optional="show"/>
+            <field name="opening_stock" optional="show"/>
+            <field name="purchase_qty" optional="show"/>
+            <field name="issue_qty" optional="show"/>
+            <field name="closing_stock" optional="show"/>
+        </list>
+        </field>
+    </record>
+</odoo>

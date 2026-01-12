@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_picking_outgoing_form_inherit" model="ir.ui.view">
+    <field name="name">stock.picking.starplast</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='location_dest_id']" position="after">
+                <field name="rm_add_date" invisible="picking_type_code != 'incoming'"/>
+                <field name="rejection_reason_id" invisible="picking_type_code != 'outgoing'"/>
+                <field name="party_id" invisible="picking_type_code == 'outgoing'"/>
+                <field name="supplier_batch_number" invisible="picking_type_code != 'incoming'"/>
+                <field name="internal_batch_number" invisible="picking_type_code != 'incoming'"/>
+                <field name="batch_number" invisible="picking_type_code != 'outgoing'"/>
+                <!-- <field name="removal_type" invisible="picking_type_code != 'incoming'"/> -->
+      </xpath>
+      <xpath expr="//field[@name='origin']" position="after">
+                <field name="mfi_value" invisible="picking_type_code != 'incoming'"/>
+                <field name="bags_type" invisible="picking_type_code != 'incoming'"/>
+                <field name="number_of_bags" invisible="picking_type_code != 'incoming'"/>
+                <field name="invoice_number"/>
+                <field name="remarks"/>
+                <field name="total_product_qty" readonly="1" invisible="1"/>
+      </xpath>
+       <xpath expr="//field[@name='date_done']" position="after">
+       <field name="actual_dispatch_date" invisible="picking_type_code != 'outgoing'"/>
+       </xpath>
+       <xpath expr="//field[@name='actual_dispatch_date']" position="before">
+              <field name="exp_dis_date" string="Expected Dispatch Date" invisible="picking_type_code != 'outgoing'"/>
+       </xpath>
+       <xpath expr="//field[@name='date_done']" position="attributes">
+              <attribute name="invisible">picking_type_code == 'outgoing'</attribute>
+       </xpath>
+       <xpath expr="//field[@name='date_deadline']" position="attributes">
+              <attribute name="invisible">picking_type_code == 'outgoing'</attribute>
+       </xpath>
+       <xpath expr="//field[@name='scheduled_date']" position="attributes">
+              <attribute name="invisible">picking_type_code == 'outgoing'</attribute>
+       </xpath>
+       <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_open_stock_move"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-dropbox"
+                        invisible="picking_type_code != 'outgoing'">
+                    <field name="packing_memo_count"
+                           widget="statinfo"
+                           string="Packing Memo"
+                           invisible="picking_type_code != 'outgoing'"
+                           />
+                </button>
+            </xpath>
+    </field>
+  </record>
+
+ <record id="view_picking_outgoing_tree_inherit" model="ir.ui.view">
+    <field name="name">stock.picking.list.starplast</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.vpicktree"/>
+    <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='origin']" position="after">
+              <field name="total_product_qty"
+                     optional="show"
+                     column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <!-- Incoming-only fields -->
+            <field name="rm_add_date"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <!-- Outgoing-only fields -->
+            <field name="batch_number"
+                   optional="show"
+                   column_invisible="context.get('show_outgoing_fields') != True"/>
+
+            <!-- <field name="removal_type"
+                   optional="show"
+                   column_invisible="context.get('show_outgoing_fields') != True"/> -->
+
+            <!-- No condition (unchanged) -->
+            <field name="invoice_number" optional="show"/>
+
+            <!-- Incoming-only fields -->
+            <field name="internal_batch_number"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <field name="supplier_batch_number"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <field name="mfi_value"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <field name="bags_type"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <field name="number_of_bags"
+                   optional="show"
+                   column_invisible="context.get('show_incoming_fields') != True"/>
+
+            <field name="remarks" optional="show"/>
+
+        </xpath>
+
+    </field>
+</record>
+<record id="view_picking_form_add_product_grade" model="ir.ui.view">
+    <field name="name">stock.picking.form.add.product.grade</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+
+        <xpath expr="//field[@name='move_ids_without_package']/list/field[@name='product_id']"
+               position="after">
+            <field name="product_grade" string="Grade"/>
+        </xpath>
+
+    </field>
+</record>
+
+
+<record id="action_stock_picking_outgoing_starplast" model="ir.actions.act_window">
+    <field name="name">Outgoing Pickings</field>
+    <field name="res_model">stock.picking</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('picking_type_code','=','outgoing')]</field>
+    <field name="context">{'show_outgoing_fields': True}</field>
+</record>
+<record id="action_stock_picking_incoming_starplast" model="ir.actions.act_window">
+    <field name="name">Incoming Pickings</field>
+    <field name="res_model">stock.picking</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('picking_type_code','=','incoming')]</field>
+    <field name="context">{'show_incoming_fields': True}</field>
+</record>
+<menuitem id="menu_stock_picking_incoming_starplast"
+          name="Incoming Pickings"
+          parent="stock.menu_stock_transfers"
+          action="action_stock_picking_incoming_starplast"/>
+
+<menuitem id="menu_stock_picking_outgoing_starplast"
+          name="Outgoing Pickings"
+          parent="stock.menu_stock_transfers"
+          action="action_stock_picking_outgoing_starplast"/>
+</odoo>

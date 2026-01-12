@@ -1,0 +1,63 @@
+<odoo>
+  <data>
+    <record id="view_mrp_routing_workcenter_form_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.routing.workcenter.form.inherit.starplastic</field>
+      <field name="model">mrp.routing.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='workcenter_id']" position="after">
+            <field name="cavity"/>
+        </xpath>
+        <!-- <xpath expr="//field[@name='employee_ratio']" position="replace">
+            <field name="standard_cycle_time"/>
+        </xpath> -->
+        <xpath expr="//field[@name='workcenter_id']" position="after">
+            <field name="standard_cycle_time_hourly"/>
+            <field name="cycle_time"/>
+        </xpath>
+         <xpath expr="//field[@name='workcenter_id']" position="after">
+            <field name="workcenter_ids" widget="many2many_checkboxes"/>
+        </xpath>
+        <!-- <xpath expr="//field[@name='workcenter_id']" position="attributes">
+            <attribute name="invisible">1</attribute>
+        </xpath> -->
+        <xpath expr="//field[@name='time_mode']" position="before">
+            <field name="standard_production_per_hour"/>
+        </xpath>
+        <xpath expr="//field[@name='time_mode']" position="before">
+            <field name="cycle_time_tolerance"/>
+            <field name="cycle_time_manual_seconds"/>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- List view for Mould (mrp.routing.workcenter) -->
+    <record id="view_mrp_routing_workcenter_tree_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.routing.workcenter.list.starplastic</field>
+      <field name="model">mrp.routing.workcenter</field>
+      <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//list/field[@name='bom_id']" position="attributes">
+                <attribute name="optional">show</attribute>
+        </xpath>
+        <!-- <xpath expr="//list/field[@name='quality_point_count']" position="attributes">
+                <attribute name="optional">show</attribute>
+        </xpath> -->
+        <xpath expr="//list/field[@name='time_cycle']" position="attributes">
+                <attribute name="optional">show</attribute>
+        </xpath>
+        <xpath expr="//list/field[@name='name']" position="after">
+          <field name="standard_cycle_time" optional="show"/>
+          <field name="cycle_time" optional="show"/>
+          <field name="cavity" optional="show"/>
+          <field name="standard_cycle_time_hourly" optional="show"/>
+          <field name="standard_production_per_hour" optional="show"/>
+          <field name="cycle_time_tolerance" optional="show"/>
+        </xpath>
+        <xpath expr="//list/field[@name='workcenter_id']" position="replace">
+          <field name="workcenter_ids" widget="many2many_checkboxes" optional="show"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>

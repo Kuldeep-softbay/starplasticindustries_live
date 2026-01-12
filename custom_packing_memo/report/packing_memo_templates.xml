@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- ================= REPORT ================= -->
+    <template id="report_packing_memo">
+        <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+
+                    <t t-set="company" t-value="o.company_id or env.company"/>
+                    <t t-set="payload" t-value="o.get_packing_memo_payload()"/>
+                    <t t-set="details" t-value="payload.get('details', [])"/>
+                    <t t-set="summary" t-value="payload.get('summary', [])"/>
+
+
+                    <!-- ================= HEADER (REPLACED) ================= -->
+                    <div class="header-box border border-dark p-2 mb-3">
+                        <div class="row">
+                            <!-- LEFT: Company Logo & Name -->
+                            <div class="col-3">
+                                <img t-if="company.logo"
+                                    t-att-src="image_data_uri(company.logo)"
+                                    style="max-height:45px;"
+                                    alt="Logo"/>
+                                <div class="mt-2">
+                                    <strong><t t-esc="company.name"/></strong>
+                                </div>
+                            </div>
+
+                            <!-- RIGHT: Header Meta Information -->
+                            <div class="col-9">
+                                <table class="table table-sm table-bordered mb-0">
+                                    <tr>
+                                        <td>
+                                            <strong>Format No:</strong>
+                                            <t t-esc="company.header_format_no or ''"/>
+                                        </td>
+                                        <td>
+                                            <strong>Effective Date:</strong>
+                                            <t t-esc="company.header_effective_date and o.date_order.strftime('%d-%m-%Y') or ''"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Page No:</strong>
+                                            1 of 1
+                                        </td>
+                                        <td>
+                                            <strong>Review Date:</strong>
+                                            <t t-esc="company.header_review_date and company.header_review_date.strftime('%d-%m-%Y') or ''"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="text-center">
+                                            <strong>Title: FORMAT FOR ISSUING OF PACKING MEMO</strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= HEADER END ================= -->
+
+                    <!-- ================= BODY (UNCHANGED) ================= -->
+                    <div>
+                        <div>
+                            PACKING MEMO NO: <t t-esc="o.name"/>
+                            <span style="float:right;">
+                                Date:
+                                <t t-esc="o.date_order and o.date_order.strftime('%d-%m-%Y') or ''"/>
+                            </span>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            Customer Name:
+                            <t t-esc="o.partner_id.display_name"/>
+                        </div>
+
+                        <div>
+                            Exp Dispatch Date:
+                            <t t-esc="o.exp_dis_date and o.exp_dis_date.strftime('%d-%m-%Y') or ''"/>
+                        </div>
+
+                        <div>
+                            Exp Packing Date:
+                            <t t-esc="o.exp_packing_date and o.exp_packing_date.strftime('%d-%m-%Y') or ''"/>
+                        </div>
+
+                        <div>
+                            Actual Packing Date:
+                            <t t-esc="o.actual_packing_date and o.actual_packing_date.strftime('%d-%m-%Y') or ''"/>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            Remark:
+                            <t t-esc="o.remark or ''"/>
+                        </div>
+
+                        <div style="margin-top:10px;">
+                            Packing Details:
+                            <div style="white-space: pre-line; margin-left:20px;">
+                                <t t-esc="o.packing_details or ''"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ================= DETAILS TABLE ================= -->
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width:50px;">Sr.No.</th>
+                                <th style="width:160px;">BATCH NUM.</th>
+                                <th>ITEM NAME &amp; ITEM CODE</th>
+                                <th style="width:120px;">Remarks</th>
+                                <th style="width:100px;">Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="details" t-as="d">
+                                <tr>
+                                    <td class="text-right">
+                                        <t t-esc="d_index + 1"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="d.get('lot_name', '')"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="d['product_display_name']"/>
+                                        <t t-if="d['default_code']">
+                                            - <t t-esc="d['default_code']"/>
+                                        </t>
+                                    </td>
+                                    <td>
+                                        <t t-esc="''"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <t t-esc="d['qty']"/>
+                                    </td>
+                                </tr>
+                            </t>
+                            <t t-if="not details">
+                                <tr>
+                                    <td colspan="5">No sale order lines found.</td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- ================= SUMMARY TABLE ================= -->
+                    <table class="table table-sm table-bordered mt-3">
+                        <thead>
+                            <tr>
+                                <th style="width:50px;">Sr.No.</th>
+                                <th>BATCH NUM.</th>
+                                <th>ITEM NAME &amp; ITEM CODE</th>
+                                <th style="width:120px;">Remarks</th>
+                                <th style="width:120px;">Total Quantity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <t t-foreach="summary" t-as="s">
+                            <tr>
+                                <td class="text-right">
+                                    <t t-esc="s_index + 1"/>
+                                </td>
+                                <td>
+                                    <t t-esc="s.get('lot_name', '')"/>
+                                </td>
+                                <td>
+                                    <t t-esc="s['product_display_name']"/>
+                                    <t t-if="s['default_code']">
+                                        - <t t-esc="s['default_code']"/>
+                                    </t>
+                                </td>
+                                <td>
+                                    <t t-esc="''"/>
+                                </td>
+                                <td class="text-right">
+                                    <t t-esc="s['qty']"/>
+                                </td>
+                            </tr>
+                        </t>
+
+                        <t t-if="not summary">
+                            <tr>
+                                <td colspan="5">No items</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    </table>
+
+                    <!-- ================= FOOTER (UNCHANGED) ================= -->
+                    <div class="footer" style="text-align:center; width:100%; margin-top:10px;">
+                        <img t-if="company and company.packing_footer_image"
+                             t-att-src="'data:image/png;base64,%s' % (company.packing_footer_image.decode() if isinstance(company.packing_footer_image, bytes) else company.packing_footer_image)"
+                             style="width:100%; max-height:80px; object-fit:contain;"/>
+                    </div>
+
+                </t>
+            </t>
+        </t>
+    </template>
+
+</odoo>

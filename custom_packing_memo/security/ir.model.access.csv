@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+custom_packing_memo.access_job_party_work,access_job_party_work,custom_packing_memo.model_job_party_work,base.group_user,1,0,0,0
+access_rejection_reason_user,rejection.reason user,model_rejection_reason,base.group_user,1,1,1,1
+access_rejection_reason_manager,rejection.reason manager,model_rejection_reason,base.group_system,1,1,1,1
+access_packing_memo_user,packing.memo user,model_packing_memo,base.group_user,1,1,1,1
+access_packing_memo_line_user,packing.memo.line user,model_packing_memo_line,base.group_user,1,1,1,1
+access_packing_memo_wizard,packing.memo.wizard,model_packing_memo_wizard,base.group_user,1,1,1,1
+access_packing_memo_wizard_line,packing.memo.wizard.line,model_packing_memo_wizard_line,base.group_user,1,1,1,1
+custom_packing_memo.access_sales_monthly_report,access_sales_monthly_report,custom_packing_memo.model_sales_monthly_report,base.group_user,1,1,1,1

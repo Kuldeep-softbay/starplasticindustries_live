@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_sale_order_form_inherit_co_number" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.co.number</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Add CO Number in Order Lines (list view) -->
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']"
+                   position="after">
+                <field name="co_number" optional="show"/>
+            </xpath>
+
+            <!-- (Optional) Also add in popup form -->
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']"
+                   position="after">
+                <field name="co_number"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

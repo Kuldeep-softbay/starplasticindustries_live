@@ -1,0 +1,54 @@
+<odoo>
+  <data>
+    <record id="view_mrp_workorder_tree_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.workorder.list.starplastic</field>
+        <field name="model">mrp.workorder</field>
+      <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//list/field[@name='name']" position="attributes">
+                <attribute name="string">Mould</attribute>
+                <attribute name="optional">show</attribute>
+        </xpath>
+        <xpath expr="//list/field[@name='duration']" position="attributes">
+                <attribute name="optional">show</attribute>
+        </xpath>
+        <field name="production_id" position="after">
+                <field name="customer_po_number" optional="show"/>
+                <field name="customer_order_quantity" optional="show"/>
+                <field name="actual_delivery_date" optional="show"/>
+                <field name="expected_delivery_date" optional="show"/>
+                <field name="batch_number" optional="show"/>
+                <field name="creation_date" optional="show"/>
+                <field name="planned_start_date" optional="show"/>
+                <field name="planned_end_date" optional="show"/>
+                <field name="produced_quantity" optional="show"/>
+                <field name="remaining_quantity" optional="show"/>
+        </field>
+        <field name="state" position="after">
+                <field name="remark" optional="show"/>
+        </field>
+      </field>
+    </record>
+
+    <record id="view_mrp_workorder_form_inherit_starplastic" model="ir.ui.view">
+      <field name="name">mrp.workorder.form.starplastic</field>
+        <field name="model">mrp.workorder</field>
+      <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+      <field name="arch" type="xml">
+        <field name="production_id" position="after">
+                <field name="produced_quantity"/>
+                <field name="remaining_quantity"/>
+                <field name="planned_start_date"/>
+                <field name="planned_end_date"/>
+                <field name="creation_date"/>
+                <field name="expected_delivery_date"/>
+                <field name="batch_number"/>
+                <field name="customer_po_number"/>
+                <field name="customer_order_quantity"/>
+                <field name="actual_delivery_date"/>
+                <field name="remark"/>
+        </field>
+      </field>
+    </record>
+  </data>
+</odoo>

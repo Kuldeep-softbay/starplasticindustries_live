@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+  <!-- Shift Template views -->
+  <record id="view_wc_shift_template_list" model="ir.ui.view">
+    <field name="name">wc.shift.template.list</field>
+    <field name="model">wc.shift.template</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="code"/>
+        <field name="start_hour"/>
+        <field name="duration_hours"/>
+        <field name="sequence"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_wc_shift_template_form" model="ir.ui.view">
+    <field name="name">wc.shift.template.form</field>
+    <field name="model">wc.shift.template</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="name"/>
+            <field name="code"/>
+            <field name="start_hour"/>
+            <field name="duration_hours"/>
+            <field name="sequence"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_wc_shift_template" model="ir.actions.act_window">
+    <field name="name">Shift Templates</field>
+    <field name="res_model">wc.shift.template</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- Shift instance views -->
+  <record id="view_wc_shift_list" model="ir.ui.view">
+    <field name="name">work.center.shift.list</field>
+    <field name="model">work.center.shift</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="production_id"/>
+        <field name="date"/>
+        <field name="template_id"/>
+        <field name="supervisor_one_id"/>
+        <field name="supervisor_two_id"/>
+        <field name="mold_id"/>
+        <field name="cavity"/>
+        <field name="cycle_time_sec"/>
+        <field name="hourly_target_qty"/>
+        <field name="state"/>
+        <field name="total_produced_qty"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_wc_shift_form" model="ir.ui.view">
+    <field name="name">work.center.shift.form</field>
+    <field name="model">work.center.shift</field>
+    <field name="arch" type="xml">
+      <form string="Shift">
+        <header>
+          <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+          <button name="action_done" type="object" string="Mark Done"
+                  class="btn-primary"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="production_id"/>
+              <field name="date"/>
+              <field name="template_id"/>
+              <field name="supervisor_one_id"/>
+              <field name="supervisor_two_id"/>
+            </group>
+            <group string="Setup">
+              <field name="mold_id"/>
+              <field name="cavity"/>
+              <field name="cycle_time_sec"/>
+              <field name="hourly_target_qty" readonly="1"/>
+              <field name="total_produced_qty"/>
+            </group>
+          </group>
+
+          <group string="Hourly Entries">
+            <!-- FIX: use id instead of active_id in context -->
+            <field name="entry_ids" mode="list"
+                   context="{'default_production_id': production_id, 'default_shift_id': id}"
+                   views="[(list, ref('starplastic_work_center.view_work_center_hourly_entry_master_list'))]"/>
+          </group>
+          <group string="Downtime Reasons Summary">
+            <field name="downtime_summary_ids" mode="list">
+              <list>
+                  <field name="hour_slot"/>
+                  <field name="reason_id"/>
+                  <field name="sub_reason_id"/>
+                  <field name="total_duration"/>
+                </list>
+            </field>
+        </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_wc_shift" model="ir.actions.act_window">
+    <field name="name">Shifts</field>
+    <field name="res_model">work.center.shift</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- Menus -->
+  <menuitem id="menu_shop_floor_config_root"
+            name="Shop Floor"
+            parent="mrp.menu_mrp_configuration"
+            sequence="120"/>
+
+  <menuitem id="menu_wc_shift_template"
+            name="Shift Templates"
+            parent="menu_shop_floor_config_root"
+            action="action_wc_shift_template"
+            sequence="5"/>
+
+  <menuitem id="menu_wc_shift"
+            name="Shifts"
+            parent="menu_shop_floor_config_root"
+            action="action_wc_shift"
+            sequence="6"/>
+</odoo>

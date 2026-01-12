@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_order_form_inherit_packing_memo" model="ir.ui.view">
+    <field name="name">sale.order.form.inherit.packing.memo</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+      <xpath expr="//notebook" position="inside">
+        <page string="Packing">
+          <group>
+            <group>
+              <field name="exp_dis_date"/>
+              <field name="exp_packing_date"/>
+              <field name="actual_packing_date"/>
+            </group>
+            <group>
+              <field name="remark"/>
+              <field name="packing_details" placeholder="Describe packing breakdown as in your memo"/>
+            </group>
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

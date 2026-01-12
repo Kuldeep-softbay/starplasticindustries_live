@@ -1,0 +1,48 @@
+<odoo>
+    <record id="view_fg_work_order_report_tree" model="ir.ui.view">
+        <field name="name">fg.work.order.report.list</field>
+        <field name="model">fg.work.order.report</field>
+        <field name="arch" type="xml">
+            <list string="FG Stock Work Order Report" create="false" edit="false" delete="false">
+                <field name="product_id"/>
+                <field name="price"/>
+                <field name="product_weight_sale"/>
+                <field name="opening_qty"/>
+                <field name="production_qty"/>
+                <field name="dispatch_qty"/>
+                <field name="closing_qty"/>
+                <field name="from_date" invisible="1" optional="hide"/>
+                <field name="to_date" invisible="1" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- Wizard form view -->
+    <record id="view_fg_work_order_report_wizard_form" model="ir.ui.view">
+        <field name="name">fg.work.order.report.wizard.form</field>
+        <field name="model">fg.work.order.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="FG StockWork Order Report">
+                <group>
+                    <field name="from_date"/>
+                    <field name="to_date"/>
+                </group>
+                <footer>
+                    <button string="Show Report" type="object"
+                            name="action_show_report" class="btn-primary"/>
+                    <button string="Cancel" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action: open wizard -->
+    <record id="action_fg_work_order_report_wizard" model="ir.actions.act_window">
+        <field name="name">FG Stock Work Order Report</field>
+        <field name="res_model">fg.work.order.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_fg_work_order_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

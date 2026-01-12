@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =========================================================
+         CUSTOM HEADER (PDF SAFE)
+    ========================================================== -->
+    <template id="custom_report_header">
+        <table style="width:100%; border:1px solid #000; font-size:12px; margin-bottom:10px;">
+            <tr>
+                <!-- LEFT: LOGO + COMPANY -->
+                <td style="width:30%; border-right:1px solid #000; padding:6px; vertical-align:middle;">
+                    <div>
+                        <img t-if="company.logo"
+                             t-att-src="image_data_uri(company.logo)"
+                             style="max-height:40px;"/>
+                    </div>
+                    <div style="margin-top:6px; font-weight:bold;">
+                        <t t-esc="company.name"/>
+                    </div>
+                </td>
+
+                <!-- RIGHT: META -->
+                <td style="width:70%; padding:0;">
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr>
+                            <td style="border:1px solid #000; padding:4px;">
+                                <strong>Format No:</strong>
+                                <t t-esc="company.work_order_header_format_no or ''"/>
+                            </td>
+                            <td style="border:1px solid #000; padding:4px;">
+                                <strong>Effective Date:</strong>
+                                <t t-esc="company.work_order_header_effective_date
+                                          and company.work_order_header_effective_date.strftime('%d-%m-%Y')
+                                          or ''"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:4px;">
+                                <strong>Page No:</strong> 1 of 1
+                            </td>
+                            <td style="border:1px solid #000; padding:4px;">
+                                <strong>Review Date:</strong>
+                                <t t-esc="company.work_order_header_review_date
+                                          and company.work_order_header_review_date.strftime('%d-%m-%Y')
+                                          or ''"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"
+                                style="border:1px solid #000; padding:6px; text-align:center; font-weight:bold;">
+                                Title: FORMAT FOR ISSUING OF WORK ORDER
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- =========================================================
+         CUSTOM FOOTER
+    ========================================================== -->
+    <template id="custom_report_footer">
+        <div class="footer text-center mt-2">
+            <img t-if="company.work_order_footer_image"
+                 t-att-src="'data:image/png;base64,%s' % (
+                     company.work_order_footer_image.decode()
+                     if isinstance(company.work_order_footer_image, bytes)
+                     else company.work_order_footer_image
+                 )"
+                 style="width:100%; max-height:80px; object-fit:contain;"/>
+        </div>
+    </template>
+
+    <!-- =========================================================
+         MAIN WORK ORDER REPORT
+    ========================================================== -->
+    <template id="work_order_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+                <!-- SET COMPANY -->
+                <t t-set="company" t-value="o.company_id"/>
+
+                <!-- HEADER -->
+                <t t-call="starplastic_work_center.custom_report_header"/>
+
+                <div class="page mt-2">
+                    <h2 class="mb-3 fw-bold">
+                        Work Order Report
+                    </h2>
+
+                    <table style="width:100%; border-collapse:collapse; font-size:12px; border:1px solid #000;">
+                        <thead style="background:#f2f2f2;">
+                            <tr class="text-center">
+                                <th style="border:1px solid #000;">Sr.No</th>
+                                <th style="border:1px solid #000;">Item Name</th>
+                                <th style="border:1px solid #000;">CO Number</th>
+                                <th style="border:1px solid #000;">CO Quantity</th>
+                                <th style="border:1px solid #000;">Production Qty</th>
+                                <th style="border:1px solid #000;">Exp. Delivery Date</th>
+                                <th style="border:1px solid #000;">Batch Number</th>
+                                <th style="border:1px solid #000;">Actual Delivery Date</th>
+                                <th style="border:1px solid #000;">Remarks</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <t t-foreach="o.move_finished_ids"
+                               t-as="line"
+                               t-index="line_index">
+
+                                <tr t-att-style="'border:1px solid #000; background:%s;' %
+                                    ('#ffffff' if line_index % 2 == 0 else '#f9f9f9')">
+
+                                    <td class="text-center" style="border:1px solid #000;">
+                                        <t t-esc="line_index + 1"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000;">
+                                        <t t-esc="line.product_id.display_name or ''"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000;">
+                                        <t t-esc="o.workorder_ids[:1].customer_po_number or '-'"/>
+                                    </td>
+
+                                    <td class="text-end" style="border:1px solid #000;">
+                                        <t t-esc="line.product_uom_qty or 0"/>
+                                    </td>
+
+                                    <td class="text-end" style="border:1px solid #000;">
+                                        <t t-esc="sum(line.move_line_ids.mapped('qty_done'))"/>
+                                    </td>
+
+                                    <td class="text-center" style="border:1px solid #000;">
+                                        <t t-esc="o.workorder_ids[:1].expected_delivery_date
+                                                  and o.workorder_ids[:1].expected_delivery_date.strftime('%d/%m/%Y')
+                                                  or '-'"/>
+                                    </td>
+
+                                    <td class="text-center" style="border:1px solid #000;">
+                                        <t t-esc="', '.join(line.lot_ids.mapped('name'))"/>
+                                    </td>
+
+                                    <td class="text-center" style="border:1px solid #000;">
+                                        <t t-esc="o.workorder_ids[:1].actual_delivery_date
+                                                  and o.workorder_ids[:1].actual_delivery_date.strftime('%d/%m/%Y')
+                                                  or '-'"/>
+                                    </td>
+
+                                    <td style="border:1px solid #000;">
+                                        <t t-esc="o.workorder_ids[:1].remark or '-'"/>
+                                    </td>
+
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- FOOTER -->
+                <t t-call="starplastic_work_center.custom_report_footer"/>
+
+            </t>
+        </t>
+    </template>
+
+</odoo>

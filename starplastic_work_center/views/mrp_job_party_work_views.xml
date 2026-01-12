@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_job_part_work_list" model="ir.ui.view">
+        <field name="name">job.party.work.list</field>
+        <field name="model">job.party.work</field>
+        <field name="arch" type="xml">
+            <list string="Job Part Work">
+                <field name="name"/>
+                <field name="work_type"/>
+                <field name="remark"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_job_part_work_form" model="ir.ui.view">
+        <field name="name">job.party.work.form</field>
+        <field name="model">job.party.work</field>
+        <field name="arch" type="xml">
+            <form string="Job Part Work">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="work_type"/>
+                        <field name="remark"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_job_part_work" model="ir.actions.act_window">
+        <field name="name">Job Party Work</field>
+        <field name="res_model">job.party.work</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_job_part_work"
+              name="Job Party Work"
+            parent="mrp.menu_mrp_configuration"
+              action="action_job_part_work"/>
+</odoo>

@@ -1,0 +1,23 @@
+{
+    "name": "FG Work Order Report",
+    "version": "18.0.1.0.0",
+    "depends": ["stock", 'custom_packing_memo', 'starplastic_work_center', 'purchase_stock_analysis'],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/fg_store_report_views.xml",
+        "views/fg_work_order_report_views.xml",
+        "views/fg_work_order_wise_report_views.xml",
+        "views/rm_real_store_book_report_views.xml",
+        "views/rm_grade_wise_stock_report_views.xml",
+        "views/rm_stock_sheet_report_views.xml",
+        "views/rm_required_available_report_views.xml",
+        "views/production_report_views.xml",
+        "views/dispatch_delay_report_views.xml",
+        "views/fg_rm_report_menu_views.xml",
+        "views/dispatch_delay_report_summery_views.xml",
+        "reports/rm_stock_sheet_report_templates.xml",
+        "reports/rm_grade_wise_stock_report_templates.xml",
+    ],
+    "application": False,
+    "installable": True,
+}

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_inherit_branding" model="ir.ui.view">
+        <field name="name">res.company.form.inherit.branding</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='branches']" position="after">
+                <page string="Production Header/Footer">
+                    <group string="Work Order Branding">
+                        <field name="work_order_footer_image" widget="image" class="oe_avatar"/>
+                        <!-- <field name="work_order_header_format_no"/>
+                        <field name="work_order_header_effective_date"/>
+                        <field name="work_order_header_review_date"/> -->
+                    </group>
+
+                    <group string="Production Memo Branding">
+                        <field name="production_memo_header_image" widget="image" class="oe_avatar"/>
+                        <field name="production_memo_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <group string="Machine Status Memo Branding">
+                        <field name="machine_status_memo_header_image" widget="image" class="oe_avatar"/>
+                        <field name="machine_status_memo_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <group string="Delayed Production Report Branding">
+                        <field name="delayed_production_report_header_image" widget="image" class="oe_avatar"/>
+                        <field name="delayed_production_report_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <group string="RM Stock Book Report Branding">
+                        <field name="rm_stock_book_report_header_image" widget="image" class="oe_avatar"/>
+                        <field name="rm_stock_book_report_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <group string="RM Grade Report Branding">
+                        <field name="rm_grade_report_header_image" widget="image" class="oe_avatar"/>
+                        <field name="rm_grade_report_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <group string="RM Stock Sheet Report Branding">
+                        <field name="rm_stock_sheet_report_header_image" widget="image" class="oe_avatar"/>
+                        <field name="rm_stock_sheet_report_footer_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

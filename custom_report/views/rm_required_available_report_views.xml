@@ -1,0 +1,63 @@
+<odoo>
+    <!-- Wizard form -->
+    <record id="view_rm_required_available_wizard_form" model="ir.ui.view">
+        <field name="name">rm.required.available.wizard.form</field>
+        <field name="model">rm.required.available.wizard</field>
+        <field name="arch" type="xml">
+            <form string="RM Required and Available Report">
+                <group>
+                    <field name="party_id"/>
+                </group>
+                <footer>
+                    <button name="action_show_report"
+                            string="Show"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_rm_required_available_report_tree" model="ir.ui.view">
+        <field name="name">rm.required.available.report.tree</field>
+        <field name="model">rm.required.available.report</field>
+        <field name="arch" type="xml">
+            <list string="RM Required and Available" create="false" edit="false" delete="false">
+                <field name="product_id" string="Raw Material"/>
+                <field name="rm_required_qty"/>
+                <field name="location_id"/>
+                <field name="rm_available_qty"/>
+                <field name="difference_qty"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search view (optional) -->
+    <record id="view_rm_required_available_report_search" model="ir.ui.view">
+        <field name="name">rm.required.available.report.search</field>
+        <field name="model">rm.required.available.report</field>
+        <field name="arch" type="xml">
+            <search string="RM Required and Available">
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <group expand="0" string="Group By">
+                    <filter name="groupby_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="groupby_vendor" string="Location" context="{'group_by': 'location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_rm_required_available_wizard" model="ir.actions.act_window">
+        <field name="name">RM Required and Available Report</field>
+        <field name="res_model">rm.required.available.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_rm_required_available_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

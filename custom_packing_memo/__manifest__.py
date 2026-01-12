@@ -1,0 +1,23 @@
+{
+    "name": "Packing Memo",
+    "version": "1.0.0",
+    "summary": "Generate two packing memo copies from Sales Orders",
+    "category": "Sales",
+    "depends": ["stock", 'sale_management'],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/res_company_views.xml",
+        # 'views/res_partner_views.xml',
+        "views/sale_order_views.xml",
+        "views/stock_picking_views.xml",
+        "report/packing_memo_report.xml",
+        "report/packing_memo_templates.xml",
+        "report/sales_monthly_report_views.xml",
+        "views/sale_report_views.xml",
+        'views/stock_rejection_reason_views.xml',
+        "wizard/packing_memo_wizard.xml",
+    ],
+    "installable": True,
+    "license": "LGPL-3",
+    "application": False,
+}

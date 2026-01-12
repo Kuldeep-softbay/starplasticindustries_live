@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <!-- list (master list) -->
+  <record id="view_work_center_hourly_entry_master_list" model="ir.ui.view">
+    <field name="name">work.center.hourly.entry.master.list</field>
+    <field name="model">work.center.hourly.entry</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="production_id" optional="show"/>
+        <field name="time" optional="show"/>
+        <field name="operator_one_id" optional="show"/>
+        <field name="operator_two_id" optional="show"/>
+        <field name="unit_weight" optional="show"/>
+        <field name="rejection_reason" optional="show"/>
+        <field name="shut_down" optional="show"/>
+        <field name="produced_weight_kg" optional="show"/>
+        <field name="produced_qty_number" optional="show"/>
+        <field name="reject_weight_kg" optional="show"/>
+        <field name="reject_qty_number" optional="show"/>
+        <field name="actual_cycle_time" optional="show"/>
+        <field name="qc_check" optional="show"/>
+        <field name="state" widget="badge" optional="show"/>
+        <field name="create_date" optional="show"/>
+        <field name="create_uid" optional="show"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Inline reason lines for persistent entries -->
+  <record id="view_work_center_hourly_entry_reason_list_inline" model="ir.ui.view">
+    <field name="name">work.center.hourly.entry.reason.list.inline</field>
+    <field name="model">work.center.hourly.entry.reason.line</field>
+    <field name="arch" type="xml">
+      <list editable="bottom">
+        <field name="reason_id"/>
+        <field name="duration_minutes"/>
+        <field name="sub_reason_id"/>
+        <field name="actual_time_minutes"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Form -->
+  <record id="view_work_center_hourly_entry_master_form" model="ir.ui.view">
+    <field name="name">work.center.hourly.entry.master.form</field>
+    <field name="model">work.center.hourly.entry</field>
+    <field name="arch" type="xml">
+      <form string="Hourly Entry">
+        <header>
+          <!-- Statusbar for state -->
+          <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"
+                 statusbar_colors="draft:gray;confirmed:blue;done:green"/>
+          <!-- Actions -->
+          <button name="action_set_to_draft" type="object" string="Set to Draft"
+                  class="btn-secondary" invisible="state != 'confirmed'"/>
+          <button name="action_confirm" type="object" string="Confirm"
+                  class="btn-primary" invisible="state != 'draft'"/>
+          <button name="action_done" type="object" string="Mark Done"
+                  class="btn-primary oe_highlight" invisible="state != 'confirmed'"/>
+        </header>
+        <sheet>
+          <group>
+            <group>
+              <field name="production_id"/>
+              <field name="time"/>
+              <field name="operator_one_id"/>
+              <field name="operator_two_id"/>
+              <field name="shut_down"/>
+              <field name="weight_gm"/>
+              <field name="unit_weight"/>
+              <field name="rejection_reason"/>
+            </group>
+            <group string="Production">
+              <field name="produced_weight_kg"/>
+              <field name="produced_qty_number"/>
+              <field name="reject_weight_kg"/>
+              <field name="reject_qty_number"/>
+              <field name="actual_cycle_time"/>
+              <field name="qc_check"/>
+            </group>
+          </group>
+
+          <group string="Downtime Reasons"
+                invisible="shut_down==False">
+            <field name="reason_line_ids"
+                   mode="list,form"
+                   views="[(list, ref('starplastic_work_center.view_work_center_hourly_entry_reason_list_inline'))]"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Downtime masters (unchanged) -->
+  <record id="view_work_center_downtime_ubreason_form" model="ir.ui.view">
+    <field name="name">wc.downtime.subreason.form</field>
+    <field name="model">wc.downtime.subreason</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="reason_id"/>
+            <field name="name"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_work_center_downtime_ubreason_list" model="ir.ui.view">
+    <field name="name">wc.downtime.subreason.list</field>
+    <field name="model">wc.downtime.subreason</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="name"/>
+        <field name="reason_id"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Search -->
+  <record id="view_work_center_hourly_entry_master_search" model="ir.ui.view">
+    <field name="name">work.center.hourly.entry.master.search</field>
+    <field name="model">work.center.hourly.entry</field>
+    <field name="arch" type="xml">
+      <search>
+        <field name="production_id"/>
+        <field name="operator_one_id"/>
+        <field name="operator_two_id"/>
+        <field name="shut_down"/>
+        <field name="state"/>
+        <filter string="QC Checked" name="qc_yes" domain="[('qc_check','=',True)]"/>
+        <filter string="Has Rejection" name="rej" domain="['|',('reject_weight_kg','>',0),('reject_qty_number','>',0)]"/>
+        <group expand="0" string="Group By">
+          <filter string="Production" name="grp_prod" context="{'group_by': 'production_id'}"/>
+          <filter string="Shut Down" name="grp_downtime" context="{'group_by': 'shut_down'}"/>
+          <filter string="Status" name="grp_state" context="{'group_by': 'state'}"/>
+          <filter string="Operator 1" name="grp_op1" context="{'group_by': 'operator_one_id'}"/>
+          <filter string="Operator 2" name="grp_op2" context="{'group_by': 'operator_two_id'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <!-- Action (used by the smart button) -->
+  <record id="action_work_center_hourly_entry_master" model="ir.actions.act_window">
+    <field name="name">Hourly Entries</field>
+    <field name="res_model">work.center.hourly.entry</field>
+    <field name="view_mode">list,form</field>
+    <field name="search_view_id" ref="view_work_center_hourly_entry_master_search"/>
+  </record>
+
+  <record id="action_work_center_downtime_reason_master" model="ir.actions.act_window">
+    <field name="name">Downtime Reasons</field>
+    <field name="res_model">wc.downtime.reason</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <record id="action_work_center_downtime_sub_reason_master" model="ir.actions.act_window">
+    <field name="name">Downtime Sub Reasons</field>
+    <field name="res_model">wc.downtime.subreason</field>
+    <field name="view_mode">list,form</field>
+  </record>
+
+  <!-- Menus -->
+  <menuitem id="menu_shop_floor_config_root"
+            name="Shop Floor"
+            parent="mrp.menu_mrp_configuration"
+            sequence="120"/>
+  <menuitem id="menu_downtime_reason_master"
+            name="Downtime Reasons"
+            parent="menu_shop_floor_config_root"
+            action="action_work_center_downtime_reason_master"
+            sequence="10"/>
+  <menuitem id="menu_downtime_sub_reason_master"
+            name="Downtime Sub Reasons"
+            parent="menu_shop_floor_config_root"
+            action="action_work_center_downtime_sub_reason_master"
+            sequence="20"/>
+  <menuitem id="menu_hourly_entry_master"
+            name="Hourly Entries"
+            parent="menu_shop_floor_config_root"
+            action="action_work_center_hourly_entry_master"
+            sequence="30"/>
+</odoo>

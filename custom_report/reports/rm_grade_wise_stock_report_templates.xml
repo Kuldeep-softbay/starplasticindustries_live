@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- RM Grade Wise Stock PDF template -->
+    <template id="report_rm_grade_wise_stock_document">
+        <t t-call="web.html_container">
+            <t t-set="first" t-value="docs and docs[0] or False"/>
+            <t t-set="report_date_from" t-value="context.get('date_from') or ''"/>
+            <t t-set="report_date_to" t-value="context.get('date_to') or ''"/>
+            <t t-set="party_name" t-value="first and (first.party_id.name or 'ALL') or 'ALL'"/>
+            <t t-set="product_name" t-value="first and (first.product_id.display_name or 'ALL') or 'ALL'"/>
+
+            <div class="page">
+                <!-- Header image -->
+                <div style="text-align:center; margin-bottom:8px;">
+                    <t t-if="company.report_header">
+                        <img t-att-src="'data:image/png;base64,%s' % company.report_header"
+                             style="max-height:110px; width:100%; object-fit:contain;"/>
+                    </t>
+                </div>
+
+                <!-- Title & filters -->
+                <h3 style="text-align:center; margin:6px 0;">RM GRADE WISE STOCK REPORT</h3>
+                <div style="font-size:12px; margin-bottom:10px;">
+                    <strong>Date:</strong> <t t-esc="report_date_from"/> <t t-raw="&#160;&#160;"/> <strong>To:</strong> <t t-esc="report_date_to"/>
+                    <t t-raw="&#160;&#160;&#160;"/>
+                    <strong>Party:</strong> <t t-esc="party_name"/>
+                    <t t-raw="&#160;&#160;&#160;"/>
+                    <strong>Product:</strong> <t t-esc="product_name"/>
+                </div>
+
+                <!-- Table -->
+                <table class="table table-sm" style="width:100%; border-collapse:collapse; font-size:12px;">
+                    <thead>
+                        <tr style="background:#f7f7f7;">
+                            <th style="border:1px solid #333; padding:6px; width:8%;">Date</th>
+                            <th style="border:1px solid #333; padding:6px; width:10%;">Particulars</th>
+                            <th style="border:1px solid #333; padding:6px; width:18%;">Product</th>
+                            <th style="border:1px solid #333; padding:6px; width:7%;">Batch</th>
+                            <th style="border:1px solid #333; padding:6px; width:7%;">Grade</th>
+                            <th style="border:1px solid #333; padding:6px; width:12%;">Vendor/Supplier</th>
+                            <th style="border:1px solid #333; padding:6px; width:8%;">Invoice No</th>
+                            <th style="border:1px solid #333; padding:6px; width:7%; text-align:right;">Received</th>
+                            <th style="border:1px solid #333; padding:6px; width:9%;">P.Memo No</th>
+                            <th style="border:1px solid #333; padding:6px; width:7%; text-align:right;">Issue</th>
+                            <th style="border:1px solid #333; padding:6px; width:7%; text-align:right;">Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="total_received" t-value="0.0"/>
+                        <t t-set="total_issue" t-value="0.0"/>
+                        <t t-set="last_balance" t-value="0.0"/>
+                        <t t-foreach="docs" t-as="r">
+                            <tr>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.date or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.particulars or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.product_id.display_name if r.product_id else ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.batch or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.grade or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.vendor_id.name if r.vendor_id else ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.invoice_no or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top; text-align:right;">
+                                    <t t-esc="('%.3f' % (r.received_qty or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top;">
+                                    <t t-esc="r.pmemo_no or ''"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top; text-align:right;">
+                                    <t t-esc="('%.3f' % (r.issue_qty or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                                <td style="border:1px solid #bbb; padding:5px; vertical-align:top; text-align:right;">
+                                    <t t-esc="('%.3f' % (r.balance_qty or 0.0)).rstrip('0').rstrip('.')"/>
+                                </td>
+                            </tr>
+                            <t t-set="total_received" t-value="total_received + (r.received_qty or 0.0)"/>
+                            <t t-set="total_issue" t-value="total_issue + (r.issue_qty or 0.0)"/>
+                            <t t-set="last_balance" t-value="r.balance_qty or last_balance"/>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" style="border:1px solid #333; padding:6px; text-align:right;"><strong>Grand Total:</strong></td>
+                            <td style="border:1px solid #333; padding:6px; text-align:right;"><strong><t t-esc="('%.3f' % total_received).rstrip('0').rstrip('.')"/></strong></td>
+                            <td style="border:1px solid #333; padding:6px; text-align:center;"></td>
+                            <td style="border:1px solid #333; padding:6px; text-align:right;"><strong><t t-esc="('%.3f' % total_issue).rstrip('0').rstrip('.')"/></strong></td>
+                            <td style="border:1px solid #333; padding:6px; text-align:right;"><strong><t t-esc="('%.3f' % last_balance).rstrip('0').rstrip('.')"/></strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <!-- Footer image -->
+                <div style="margin-top:12px; text-align:center;">
+                    <t t-if="company.report_footer">
+                        <img t-att-src="'data:image/png;base64,%s' % company.report_footer"
+                             style="max-height:110px; width:100%; object-fit:contain;"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Report action (make sure xmlid is unique) -->
+    <report
+        id="action_report_rm_grade_wise_stock"
+        model="rm.grade.wise.stock.report"
+        string="RM Grade Wise Stock (PDF)"
+        report_type="qweb-pdf"
+        file="custom_report.report_rm_grade_wise_stock_document"
+        name="custom_report.report_rm_grade_wise_stock_document"
+        print_report_name="'RM_Grade_Wise_Stock_%s' % (time.strftime('%Y%m%d'))"
+    />
+</odoo>

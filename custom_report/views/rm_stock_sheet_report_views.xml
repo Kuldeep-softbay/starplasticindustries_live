@@ -1,0 +1,81 @@
+<odoo>
+    <!-- Wizard form -->
+    <record id="view_rm_stock_sheet_wizard_form" model="ir.ui.view">
+        <field name="name">rm.stock.sheet.wizard.form</field>
+        <field name="model">rm.stock.sheet.wizard</field>
+        <field name="arch" type="xml">
+            <form string="RM Stock Sheet Report">
+                <group>
+                    <group>
+                        <field name="date"/>
+                        <field name="rm_type" string="RM Type"/>
+                    </group>
+                    <group>
+                        <field name="party_id"/>
+                        <field name="location_id"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_show_report"
+                            string="Show"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- List view -->
+    <record id="view_rm_stock_sheet_report_tree" model="ir.ui.view">
+        <field name="name">rm.stock.sheet.report.tree</field>
+        <field name="model">rm.stock.sheet.report</field>
+        <field name="arch" type="xml">
+            <list string="RM Stock Sheet" create="false" edit="false" delete="false">
+                <!-- <field name="date"/> -->
+                <field name="party_id" optional="show"/>
+                <field name="location_id" optional="show"/>
+                <!-- <field name="rm_type"/> -->
+                <field name="rm_type" string="RM Type" optional="show"/>
+                <field name="grade" optional="show" string="Grade"/>
+                <!-- <field name="rm_grade" optional="show" string="RM Grade"/> -->
+                <field name="mfi" optional="show"/>
+                <field name="batch" optional="show"/>
+                <field name="internal_batch" optional="show"/>
+                <field name="bag_qty" optional="show"/>
+                <field name="kgs" optional="show"/>
+                <field name="total_kgs" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_rm_stock_sheet_report_search" model="ir.ui.view">
+        <field name="name">rm.stock.sheet.report.search</field>
+        <field name="model">rm.stock.sheet.report</field>
+        <field name="arch" type="xml">
+            <search string="RM Stock Sheet">
+                <field name="date"/>
+                <field name="party_id"/>
+                <field name="location_id"/>
+                <field name="product_tmpl_id"/>
+                <field name="grade"/>
+                <group expand="0" string="Group By">
+                    <filter name="groupby_product" string="Product" context="{'group_by': 'product_tmpl_id'}"/>
+                    <filter name="groupby_grade" string="Grade" context="{'group_by': 'grade'}"/>
+                    <filter name="groupby_location" string="Location" context="{'group_by': 'location_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_rm_stock_sheet_wizard" model="ir.actions.act_window">
+        <field name="name">RM Stock Sheet Report</field>
+        <field name="res_model">rm.stock.sheet.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_rm_stock_sheet_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

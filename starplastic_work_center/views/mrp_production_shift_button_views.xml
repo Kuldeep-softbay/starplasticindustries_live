@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <record id="mrp_production_form_inherit_starplastic_shift_buttons" model="ir.ui.view">
+    <field name="name">mrp.production.form.inherit.starplastic.shift.buttons</field>
+    <field name="model">mrp.production</field>
+    <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+    <field name="arch" type="xml">
+          <xpath expr="//div[@name='button_box']" position="inside">
+        <field name="show_lock" invisible="1"/>
+        <button type="object"
+                name="action_view_shifts"
+                class="oe_stat_button"
+                icon="fa-calendar"
+                string="Shifts"/>
+      </xpath>
+      <xpath expr="//field[@name='product_id']" position="after">
+            <field name="sale_order_qty"
+                   options="{'no_create': True}"
+                   placeholder="C.O Quantity"/>
+        </xpath>
+        <xpath expr="//field[@name='product_id']" position="after">
+            <field name="customer_po_number"/>
+        </xpath>
+        <xpath expr="//notebook" position="inside">
+                <page string="Error Set">
+                    <group string="Error Set">
+                        <field name="unit_weight"/>
+                        <field name="total_kg"/>
+                        <field name="total_pcs"/>
+                    </group>
+                </page>
+        </xpath>
+    </field>
+  </record>
+</odoo>

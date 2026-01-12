@@ -1,0 +1,34 @@
+<odoo>
+    <record id="view_sales_monthly_report_tree" model="ir.ui.view">
+        <field name="name">sales.monthly.report.list</field>
+        <field name="model">sales.monthly.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="product_id"/>
+                <field name="price"/>
+                <field name="weight"/>
+                <field name="opening_stock"/>
+                <field name="production_qty"/>
+                <field name="dispatch_qty"/>
+                <field name="closing_stock"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_sales_monthly_report" model="ir.actions.act_window">
+        <field name="name">Sales Monthly Report</field>
+        <field name="res_model">sales.monthly.report</field>
+        <field name="view_mode">list</field>
+        <field name="domain">
+        [
+            ('product_id.sale_ok', '=', True)
+        ]
+    </field>
+    </record>
+
+    <menuitem
+        id="menu_sales_monthly_report"
+        name="Sales Monthly Report"
+        parent="sale.menu_sale_report"
+        action="action_sales_monthly_report"/>
+</odoo>

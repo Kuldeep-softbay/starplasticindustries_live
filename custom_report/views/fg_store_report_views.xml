@@ -1,0 +1,72 @@
+<odoo>
+    <!-- Wizard form -->
+    <record id="view_fg_store_report_wizard_form" model="ir.ui.view">
+        <field name="name">fg.store.report.wizard.form</field>
+        <field name="model">fg.store.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="FG Stock Report">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="product_id"/>
+                        <field name="stock_type"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_show_report"
+                            string="Show"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view for report lines -->
+    <record id="view_fg_store_report_tree" model="ir.ui.view">
+        <field name="name">fg.store.report.list</field>
+        <field name="model">fg.store.report</field>
+        <field name="arch" type="xml">
+            <list string="FG Stock Report" create="false" edit="false">
+                <field name="date" optional="show"/>
+                <field name="partner_id" optional="show"/>
+                <field name="batch_number" optional="show"/>
+                <field name="pmemo" optional="show"/>
+                <field name="invoice_number" optional="show"/>
+                <field name="unit_weight" optional="show"/>
+                <field name="received_qty" optional="show"/>
+                <field name="issued_qty" optional="show"/>
+                <field name="balance_qty" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- (Optional) search view -->
+    <record id="view_fg_store_report_search" model="ir.ui.view">
+        <field name="name">fg.store.report.search</field>
+        <field name="model">fg.store.report</field>
+        <field name="arch" type="xml">
+            <search string="FG Stock Report">
+                <field name="date"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action to open wizard -->
+    <record id="action_fg_store_report_wizard" model="ir.actions.act_window">
+        <field name="name">FG Stock Report</field>
+        <field name="res_model">fg.store.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_fg_store_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

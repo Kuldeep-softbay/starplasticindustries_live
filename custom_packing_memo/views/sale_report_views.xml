@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_order_product_sale_report_tree_inherit_stock_weight" model="ir.ui.view">
+        <field name="name">sale.report.tree.stock.weight</field>
+        <field name="model">sale.report</field>
+        <field name="inherit_id" ref="sale.sale_report_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_total']" position="before">
+                <field name="product_weight"/>
+                <field name="opening_stock"/>
+                <field name="production_qty"/>
+                <field name="dispatch_qty"/>
+                <field name="closing_stock"/>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--  Inherit the actual layout template used in all reports -->
+    <template id="external_layout_inherit_quotation_branding" inherit_id="web.external_layout">
+
+        <!-- Replace Header -->
+        <!-- <xpath expr="//div[@class='header']" position="replace">
+            <t t-set="company" t-value="company_id or (docs and docs[0].company_id)"/>
+            <div class="header" style="text-align:center; margin-bottom:10px;">
+                <t t-if="company.quotation_header_image">
+                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_header_image.decode()"
+                         style="max-width:100%; height:auto;"/>
+                </t>
+            </div>
+        </xpath> -->
+
+        <!-- Replace Footer -->
+        <xpath expr="//div[@class='footer']" position="replace">
+            <t t-set="company" t-value="company_id or (docs and docs[0].company_id)"/>
+            <div class="footer" style="text-align:center; margin-top:10px;">
+                <t t-if="company.quotation_footer_image">
+                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_footer_image.decode()"
+                         style="max-width:100%; height:auto;"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+</odoo>
