@@ -78,6 +78,7 @@ class MrpRoutingWorkcenter(models.Model):
         cycles = required_qty / self.cavity
         return cycles * self.time_cycle_manual
 
+    
     @api.constrains('cavity', 'standard_cycle_time', 'cycle_time_tolerance')
     def _check_positive_values(self):
         for rec in self:

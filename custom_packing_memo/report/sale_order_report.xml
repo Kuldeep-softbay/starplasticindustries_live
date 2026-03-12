@@ -8,7 +8,7 @@
             <t t-set="company" t-value="company_id or (docs and docs[0].company_id)"/>
             <div class="header" style="text-align:center; margin-bottom:10px;">
                 <t t-if="company.quotation_header_image">
-                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_header_image.decode()"
+                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_header_image.decode()" 
                          style="max-width:100%; height:auto;"/>
                 </t>
             </div>
@@ -19,7 +19,7 @@
             <t t-set="company" t-value="company_id or (docs and docs[0].company_id)"/>
             <div class="footer" style="text-align:center; margin-top:10px;">
                 <t t-if="company.quotation_footer_image">
-                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_footer_image.decode()"
+                    <img t-att-src="'data:image/png;base64,%s' % company.quotation_footer_image.decode()" 
                          style="max-width:100%; height:auto;"/>
                 </t>
             </div>

@@ -37,9 +37,9 @@
             <list string="RM Grade Wise Stock" create="false" edit="false" delete="false">
                 <field name="date" optional="show"/>
                 <field name="particulars" optional="show"/>
-                <field name="rm_type" optional="show"/>
+                <field name="product_id" optional="show"/>
                 <field name="batch" optional="show"/>
-                <field name="rm_grade_name" optional="show" string="RM Grade"/>
+                <field name="rm_grade_name" optional="show" string="RM Grade"/>      
                 <field name="vendor_id" optional="show"/>
                 <field name="invoice_no" optional="show"/>
                 <field name="received_qty" optional="show"/>

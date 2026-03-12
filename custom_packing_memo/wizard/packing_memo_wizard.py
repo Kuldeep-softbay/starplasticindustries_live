@@ -28,6 +28,24 @@ class PackingMemoWizard(models.TransientModel):
         string='Products',
     )
 
+    # def action_generate_packing_memo(self):
+    #     self.ensure_one()
+
+    #     selections = {}
+    #     for line in self.line_ids:
+    #         if not line.lot_id:
+    #             raise ValidationError("Please select Batch / Lot")
+    #         if line.selected_qty <= 0:
+    #             raise ValidationError("Selected Qty must be greater than zero")
+
+    #         selections[str(line.lot_id.id)] = line.selected_qty
+
+    #     return self.env.ref(
+    #         'custom_packing_memo.action_report_packing_memo'
+    #     ).with_context(
+    #         packing_memo_selections=selections
+    #     ).report_action(self.sale_id)
+    
     def action_open_stock_move(self):
         self.ensure_one()
 

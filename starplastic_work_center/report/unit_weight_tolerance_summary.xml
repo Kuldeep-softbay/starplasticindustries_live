@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_unit_weight_tolerance_summary_tree" model="ir.ui.view">
+        <field name="name">unit.weight.tolerance.summary.list</field>
+        <field name="model">unit.weight.tolerance.summary</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date"/>
+                <field name="lot_id"/>
+                <field name="machine_id"/>
+                <field name="shift_desplay"/>
+                <field name="product_id"/>
+                <field name="supervisor_one_id"/>
+                <field name="supervisor_two_id"/>
+                <field name="time"/>
+                <field name="actual_weight"/>
+                <field name="std_weight"/>
+                <field name="tolerance"/>
+                <field name="action"/>
+                <field name="reason_id"/>
+                <field name="action_by"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_unit_weight_tolerance_summary" model="ir.actions.act_window">
+        <field name="name">Unit Weight Tolerance Summary</field>
+        <field name="res_model">unit.weight.tolerance.summary</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_unit_weight_tolerance_summary"
+              name="Unit Weight Tolerance Summary"
+              parent="menu_admin_tolerance"
+              action="action_unit_weight_tolerance_summary"
+              sequence="70"/>
+</odoo>

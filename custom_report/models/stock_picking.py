@@ -36,7 +36,7 @@ class StockPicking(models.Model):
     actual_dispatch_date = fields.Date(
         string='Actual Despatch Date',
         help="The date when the picking was completed.")
-
+   
     @api.depends('move_ids.product_uom_qty', 'move_line_ids.qty_done')
     def _compute_total_qty(self):
         for pick in self:

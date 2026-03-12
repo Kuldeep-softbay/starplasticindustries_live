@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<record id="view_running_cavity_list" model="ir.ui.view">
+    <field name="name">running.cavity.report.list</field>
+    <field name="model">running.cavity.report</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="date" optional="show"/>
+            <field name="lot_id" optional="show"/>
+            <field name="machine_id" optional="show"/>
+            <field name="shift_display" optional="show"/>
+            <field name="product_id" optional="show"/>
+            <field name="supervisor_one_id" optional="show"/>
+            <field name="supervisor_two_id" optional="show"/>
+            <field name="running_cavity" optional="show"/>
+            <field name="mould_cavity" optional="show"/>
+            <button name="action_hide"
+                        type="object"
+                        string="Hide"
+                        class="btn-primary"/>
+        </list>
+    </field>
+</record>
+
+<record id="view_running_cavity_reason_list" model="ir.ui.view">
+    <field name="name">running.cavity.reason.list</field>
+    <field name="model">running.cavity.reason</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="name"/>
+        </list>
+    </field>
+</record>
+
+<record id="view_running_cavity_reason_form" model="ir.ui.view">
+    <field name="name">running.cavity.reason.form</field>
+    <field name="model">running.cavity.reason</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="view_running_cavity_reason_wizard_form" model="ir.ui.view">
+    <field name="name">running.cavity.reason.wizard.form</field>
+    <field name="model">running.cavity.reason.wizard</field>
+    <field name="arch" type="xml">
+        <form string="Acknowledge Running Cavity">
+            <group>
+                <field name="reason_id"/>
+                <field name="action"/>
+            </group>
+            <footer>
+                <button string="Confirm"
+                        type="object"
+                        name="action_confirm"
+                        class="btn-primary"/>
+                <button string="Cancel"
+                        special="cancel"
+                        class="btn-secondary"/>
+            </footer>
+        </form>
+    </field>
+</record>
+
+<record id="action_running_cavity_reason" model="ir.actions.act_window">
+    <field name="name">Reasons</field>
+    <field name="res_model">running.cavity.reason</field>
+    <field name="view_mode">list</field>
+</record>
+
+<record id="action_running_cavity_report" model="ir.actions.act_window">
+    <field name="name">Running Cavity Report</field>
+    <field name="res_model">running.cavity.report</field>
+    <field name="view_mode">list</field>
+</record>
+
+<menuitem id="menu_admin_tolerance"
+          name="Admin Tolerance"
+          parent="mrp.menu_mrp_reporting"
+          sequence="30"/>
+
+<menuitem id="menu_running_cavity_reason"
+          name="Reasons"
+          parent="menu_admin_tolerance"
+          action="action_running_cavity_reason"
+          sequence="10"/>
+
+<menuitem id="menu_running_cavity_report"
+          name="Running Cavity Report"
+          parent="menu_admin_tolerance"
+          action="action_running_cavity_report"/>
+
+
+<menuitem id="menu_std_cycle_time_report"
+          name="Standard Cycle Time Report"
+          parent="menu_admin_tolerance"
+          action="action_std_cycle_time_report"/>
+</odoo>

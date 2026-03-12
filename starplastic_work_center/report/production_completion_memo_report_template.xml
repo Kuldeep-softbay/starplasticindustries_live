@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="production_completion_memo_template_starplastic">
+
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+
+            <div class="page" style="font-size:13px;">
+
+                <!-- ===== FIRST COPY ===== -->
+
+                <!-- HEADER IMAGE -->
+                <t t-if="o.company_id.production_completion_header">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <img t-att-src="image_data_uri(o.company_id.production_completion_header)"
+                             style="height:95px; width:auto;"/>
+                    </div>
+                </t>
+
+                <!-- MEMO LINE -->
+                <div style="margin-bottom:8px; font-weight:bold;">
+                    Memo <span t-esc="o.name"/> &amp; Dt :
+                    <span t-esc="o.date_finished"
+                          t-options='{"widget": "date"}'/>
+                </div>
+
+                <t t-call="starplastic_work_center.memo_table_block"/>
+
+                <br/><br/>
+
+                <div style="height:90px;"></div>
+
+                <!-- SECOND COPY -->
+                <t t-if="o.company_id.production_completion_header">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <img t-att-src="image_data_uri(o.company_id.production_completion_header)"
+                            style="height:95px; width:auto;"/>
+                    </div>
+                </t>
+
+                <div style="margin-bottom:8px; font-weight:bold;">
+                    Memo <span t-esc="o.name"/> &amp; Dt :
+                    <span t-esc="o.date_finished"
+                          t-options='{"widget": "date"}'/>
+                </div>
+
+                <t t-call="starplastic_work_center.memo_table_block"/>
+
+            </div>
+
+        </t>
+    </t>
+
+</template>
+
+
+<!-- ================= TABLE BLOCK ================= -->
+
+<template id="memo_table_block">
+
+    <table border="1"
+           style="width:100%; border-collapse:collapse; text-align:center; font-size:13px;">
+
+        <thead>
+            <tr>
+                <th>Sr.No</th>
+                <th>Batch No. &amp; Dt.</th>
+                <th>W.O.Item</th>
+                <th>W.O.Qnty.</th>
+                <th>Prodn.Qnty.</th>
+                <th>Exp.Del.Date</th>
+                <th>Completion Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>1</td>
+
+                <td>
+                    <span t-esc="o.lot_producing_id.name or ''"/>
+                    <br/>
+                    <span t-esc="o.create_date"
+                          t-options='{"widget": "date"}'/>
+                </td>
+
+                <td>
+                    <span t-esc="o.product_id.display_name"/>
+                </td>
+
+                <td>
+                    <span t-esc="o.product_qty"/>
+                </td>
+
+                <td>
+                    <span t-esc="o.qty_producing or o.product_qty"/>
+                </td>
+
+                <td>
+                    <t t-esc="o.workorder_ids[:1].expected_delivery_date
+                                                  and o.workorder_ids[:1].expected_delivery_date.strftime('%d/%m/%Y')
+                                                  or '-'"/>
+                </td>
+
+                <td>
+                    <span t-esc="o.date_finished"
+                          t-options='{"widget": "date"}'/>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+    <br/><br/>
+
+    <table style="width:100%; font-size:13px;">
+        <tr>
+            <td>Sign. PPO :</td>
+            <td style="text-align:right;">Sign. HOD Prodn. :</td>
+        </tr>
+    </table>
+
+</template>
+
+</odoo>

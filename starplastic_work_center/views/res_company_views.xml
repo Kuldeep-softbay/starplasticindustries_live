@@ -44,6 +44,16 @@
                         <field name="rm_stock_sheet_report_footer_image" widget="image" class="oe_avatar"/>
                     </group>
 
+                    <group string="Production Delay Report Branding">
+                        <field name="delay_report_header" widget="image" class="oe_avatar"/>
+                       </group>
+
+                    <group string="Production Completion Memo Branding">
+                        <field name="production_completion_header" widget="image" class="oe_avatar"/>
+                    </group>
+                    <group string="Production Delay Header Branding">
+                        <field name="production_delay_header" widget="image" class="oe_avatar"/>
+                    </group>
                 </page>
             </xpath>
         </field>

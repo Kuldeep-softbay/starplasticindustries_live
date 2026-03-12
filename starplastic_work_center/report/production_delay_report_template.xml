@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- ================= MAIN TEMPLATE ================= -->
+
+<template id="report_delay_production_template">
+
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="o">
+
+            <div class="page" style="font-size:13px;">
+
+                <!-- ================= FIRST COPY ================= -->
+
+                <!-- FIXED HEADER -->
+                <t t-set="company" t-value="o.workorder_id.company_id"/>
+
+                <t t-if="company.production_delay_header">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <img t-att-src="image_data_uri(company.production_delay_header)"
+                             style="height:95px; width:auto;"/>
+                    </div>
+                </t>
+
+
+                <!-- REPORT INFO -->
+                <div style="margin-bottom:8px; font-weight:bold;">
+                    Report No :
+                    <span t-esc="o.id"/>
+                    <br/>
+                    Date :
+                    <span t-esc="o.create_date"
+                          t-options='{"widget": "date"}'/>
+                </div>
+
+
+                <!-- TABLE -->
+                <t t-call="starplastic_work_center.delay_production_table_block"/>
+
+
+                <br/><br/>
+                <div style="height:90px;"></div>
+
+
+                <!-- ================= SECOND COPY ================= -->
+
+                <t t-if="company.production_delay_header">
+                    <div style="text-align:center; margin-bottom:8px;">
+                        <img t-att-src="image_data_uri(company.production_delay_header)"
+                             style="height:95px; width:auto;"/>
+                    </div>
+                </t>
+
+
+                <div style="margin-bottom:8px; font-weight:bold;">
+                    Report No :
+                    <span t-esc="o.id"/>
+                    <br/>
+                    Date :
+                    <span t-esc="o.create_date"
+                          t-options='{"widget": "date"}'/>
+                </div>
+
+
+                <t t-call="starplastic_work_center.delay_production_table_block"/>
+
+            </div>
+
+        </t>
+    </t>
+
+</template>
+
+
+
+<!-- ================= TABLE BLOCK ================= -->
+<template id="delay_production_table_block">
+
+    <t t-set="production" t-value="o.workorder_id.production_id"/>
+
+    <table border="1"
+           style="width:100%; border-collapse:collapse; text-align:center; font-size:13px;">
+
+        <thead>
+            <tr>
+                <th>Sr.No</th>
+                <th>C.O. No.</th>
+                <th>Batch No. &amp; Dt.</th>
+                <th>Item Name</th>
+                <th>Planned Prod. Start &amp; End Date</th>
+                <th>Actual Start &amp; End Date</th>
+                <th>Exp. Del. Date</th>
+                <th>Reason for delay</th>
+                <th>Machine Name</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+
+                <!-- Sr No -->
+                <td>1</td>
+
+                <!-- CO No -->
+                <td>
+                    <span t-esc="production.origin or '-'"/>
+                </td>
+
+                <!-- Batch -->
+                <td>
+                    <span t-esc="production.lot_producing_id.name or ''"/>
+                    <br/>
+                    <span t-esc="production.create_date"
+                          t-options='{"widget": "date"}'/>
+                </td>
+
+                <!-- Item -->
+                <td>
+                    <span t-esc="production.product_id.display_name"/>
+                </td>
+
+                <!-- Planned Production -->
+                <td>
+                    <span t-esc="o.workorder_id.planned_start_date"
+                        t-options='{"widget": "datetime"}'/>
+                    <br/>
+                    <br/>
+                    <span t-esc="o.workorder_id.planned_end_date"
+                          t-options='{"widget": "datetime"}'/>
+                </td>
+
+                <!-- Actual -->
+                <td>
+                    <span t-esc="o.workorder_id.date_start"
+                          t-options='{"widget": "datetime"}'/>
+                    <br/>
+                    <span t-esc="o.workorder_id.date_finished"
+                          t-options='{"widget": "datetime"}'/>
+                </td>
+
+                <!-- Expected -->
+                <td>
+                    <span t-esc="o.workorder_id.expected_delivery_date"
+                          t-options='{"widget": "date"}'/>
+                </td>
+
+                <!-- Reason -->
+                <td>
+                    <span t-esc="o.reason_id.name"/>
+                </td>
+
+                <!-- Machine -->
+                <td>
+                    <span t-esc="o.workorder_id.workcenter_id.name"/>
+                </td>
+
+            </tr>
+        </tbody>
+
+    </table>
+
+
+    <br/><br/>
+
+    <!-- Signature -->
+    <table style="width:100%;">
+        <tr>
+            <td>H.O.D. PRODN :</td>
+            <td style="text-align:right;">PRODN MGR. :</td>
+        </tr>
+    </table>
+
+</template>
+
+
+
+<!-- REPORT ACTION -->
+
+<record id="action_report_delay_production" model="ir.actions.report">
+    <field name="name">Delay Production Report</field>
+    <field name="model">production.delay.action.log</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">starplastic_work_center.report_delay_production_template</field>
+    <field name="report_file">starplastic_work_center.report_delay_production_template</field>
+</record>
+
+
+</odoo>

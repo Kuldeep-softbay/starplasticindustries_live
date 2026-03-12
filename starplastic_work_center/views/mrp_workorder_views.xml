@@ -46,7 +46,7 @@
                 <field name="customer_po_number"/>
                 <field name="customer_order_quantity"/>
                 <field name="actual_delivery_date"/>
-                <field name="remark"/>
+                <field name="remark"/> 
         </field>
       </field>
     </record>

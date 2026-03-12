@@ -1,0 +1,98 @@
+<odoo>
+    <record id="view_production_slip_tree" model="ir.ui.view">
+        <field name="name">production.slip.list</field>
+        <field name="model">mrp.production.slip</field>
+        <field name="arch" type="xml">
+            <list string="Production Slip" create="false" delete="false">
+
+                <!-- Basic Info -->
+                <field name="date"/>
+                <field name="shift_display" string="Shift"/>
+                <field name="time_slot"/>
+                <field name="log_time"/>
+                <field name="product_id"/>
+                <field name="cavity"/>
+
+                <!-- Operators -->
+                <field name="operator_one_id"/>
+                <field name="operator_two_id"/>
+                <field name="supervisor_one_id"/>
+                <field name="supervisor_two_id"/>
+
+                <!-- Product Details -->
+                <field name="unit_weight"/>
+                <field name="runing_cavity"/>
+
+                <!-- Cycle & QC -->
+                <field name="std_cycle_time"/>
+                <field name="actual_cycle_time"/>
+                <field name="qc_check"/>
+
+                <!-- Production -->
+                <field name="production_qty"/>
+                <field name="production_kg"/>
+                <field name="rejection_qty"/>
+                <field name="rejection_kg"/>
+                <field name="rejection_reason"/>
+
+                <!-- Downtime -->
+                <field name="shut_down_time"/>
+                <field name="reason_id"/>
+                <field name="sub_reason_id"/>
+                <field name="explanation"/>
+
+                <!-- Efficiency -->
+                <field name="efficiency"/>
+                <field name="product_efficiency"/>
+
+            </list>
+        </field>
+    </record>
+
+    <record id="view_production_slip_search" model="ir.ui.view">
+        <field name="name">production.slip.search</field>
+        <field name="model">mrp.production.slip</field>
+        <field name="arch" type="xml">
+            <search>
+
+                <field name="date"/>
+                <field name="shift_id"/>
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+                <field name="operator_one_id"/>
+
+                <!-- Group By Filters -->
+                <filter name="group_by_date"
+                        string="Date"
+                        context="{'group_by':'date'}"/>
+
+                <filter name="group_by_shift"
+                        string="Shift"
+                        context="{'group_by':'shift_id'}"/>
+
+                <filter name="group_by_machine"
+                        string="Machine"
+                        context="{'group_by':'workcenter_id'}"/>
+
+                <filter name="group_by_product"
+                        string="Product"
+                        context="{'group_by':'product_id'}"/>
+
+            </search>
+        </field>
+    </record>
+
+    <record id="action_production_slip" model="ir.actions.act_window">
+        <field name="name">Production Slip</field>
+        <field name="res_model">mrp.production.slip</field>
+        <field name="view_mode">list,search</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem id="menu_mrp_reporting_production_slip"
+              name="Production Slip"
+              parent="mrp.menu_mrp_reporting"
+              action="action_production_slip"
+              sequence="30"/>
+
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+<record id="view_std_cycle_time_tree" model="ir.ui.view">
+    <field name="name">std.cycle.time.summary.list</field>
+    <field name="model">std.cycle.time.summary</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="date" optional="show"/>
+            <field name="lot_id" optional="show"/>
+            <field name="shift_display" optional="show"/>
+            <field name="product_id" optional="show"/>
+            <field name="supervisor_one_id" optional="show"/>
+            <field name="supervisor_two_id" optional="show"/>
+            <field name="set_cycle_time" optional="show"/>
+            <field name="std_cycle_time" optional="show"/>
+            <field name="tolerance" optional="show"/>
+            <field name="reason_id" optional="show"/>
+            <field name="action" optional="show"/>
+            <field name="action_by" optional="show"/>
+        </list>
+    </field>
+</record>
+
+<record id="action_std_cycle_time_summary" model="ir.actions.act_window">
+    <field name="name">Standard Cycle Time Summary</field>
+    <field name="res_model">std.cycle.time.summary</field>
+    <field name="view_mode">list</field>
+</record>
+<menuitem id="menu_std_cycle_time_summary"
+          name="Standard Cycle Time Summary"
+          parent="menu_admin_tolerance"
+          action="action_std_cycle_time_summary"/>
+</odoo>

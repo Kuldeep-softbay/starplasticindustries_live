@@ -6,12 +6,14 @@ class WCShiftTemplate(models.Model):
     _name = 'wc.shift.template'
     _description = 'Shift Template (8-hour patterns)'
     _order = 'sequence, id'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
 
     name = fields.Char(required=True)
     code = fields.Selection(
-        [('A', 'A'), ('B', 'B'), ('C', 'C')],
+        [('F', 'F'), ('S', 'S'), ('T', 'T')],
         required=True,
-        help="Short code for the shift (A/B/C)."
+        help="Short code for the shift (F/S/T)."
     )
     start_hour = fields.Integer(string='Start Hour (0-23)', required=True)
     duration_hours = fields.Integer(string='Duration (hours)', default=8, required=True)
@@ -32,32 +34,31 @@ class WCShiftTemplate(models.Model):
     @api.onchange('code')
     def _onchange_shift_code(self):
         """Set start hour based on shift code"""
-        if self.code == 'A':
+        if self.code == 'F':
             self.start_hour = 6  # 6 AM - 2 PM
-        elif self.code == 'B':
+        elif self.code == 'S':
             self.start_hour = 14  # 2 PM - 10 PM
-        elif self.code == 'C':
+        elif self.code == 'T':
             self.start_hour = 22  # 10 PM - 6 AM
 
     @api.constrains('code', 'start_hour')
     def _check_shift_time_validity(self):
         for rec in self:
-            if rec.code == 'A' and rec.start_hour != 6:
-                raise ValidationError(_("Shift A must start at 6 AM"))
-            elif rec.code == 'B' and rec.start_hour != 14:
-                raise ValidationError(_("Shift B must start at 2 PM"))
-            elif rec.code == 'C' and rec.start_hour != 22:
-                raise ValidationError(_("Shift C must start at 10 PM"))
-
+            if rec.code == 'F' and rec.start_hour != 6:
+                raise ValidationError(_("FS must start at 6 AM"))
+            elif rec.code == 'S' and rec.start_hour != 14:
+                raise ValidationError(_("SS must start at 2 PM"))
+            elif rec.code == 'T' and rec.start_hour != 22:
+                raise ValidationError(_("TS must start at 10 PM"))
     @api.depends('code')
     def _compute_start_hour(self):
         """Automatically set start hour based on shift code"""
         for rec in self:
-            if rec.code == 'A':
+            if rec.code == 'F':
                 rec.start_hour = 6  # 6 AM to 2 PM
-            elif rec.code == 'B':
+            elif rec.code == 'S':
                 rec.start_hour = 14  # 2 PM to 10 PM
-            elif rec.code == 'C':
+            elif rec.code == 'T':
                 rec.start_hour = 22  # 10 PM to 6 AM
 
     def get_time_keys(self):
@@ -91,6 +92,138 @@ class WCShift(models.Model):
         compute='_compute_total_produced_qty',
         store=True
     )
+    remaining_qty = fields.Float(
+        string='Remaining Qty (Nos)',
+        compute='_compute_remaining_qty',
+        store=True
+    )
+
+    minimum_target_nos = fields.Float(
+        string='Minimum Target (Nos)',
+        compute='_compute_minimum_target',
+        store=True
+    )
+
+    minimum_target_kg = fields.Float(
+        string='Minimum Target (KG)',
+        compute='_compute_minimum_target',
+        store=True
+    )
+
+    hourly_entry_ids = fields.One2many(
+        'work.center.hourly.entry',
+        'shift_id',
+        string='Hourly Entries for Target Calculation'
+    )
+
+    channel_no = fields.Char("Ch.No")
+
+    workorder_id = fields.Many2one(
+        'mrp.workorder',
+        string="Work Order"
+    )
+
+    machine_id = fields.Many2one(
+        'mrp.workcenter',
+        string="Machine",
+        compute="_compute_machine",
+        store=True
+    )
+
+    unit_weight_avg = fields.Float("Unit Weight Average")
+
+    production_kg = fields.Float("Production Kg Total")
+
+    production_nos = fields.Float("Production Nos")
+
+    error_set = fields.Float("Error Set")
+
+    error_set_unit_weight = fields.Float("Error Set Unit Weight")
+
+    final_production_kg = fields.Float(
+        compute="_compute_final_values",
+        store=True
+    )
+
+    final_production_nos = fields.Float(
+        compute="_compute_final_values",
+        store=True
+    )
+
+    hourly_entry_id = fields.Many2one(
+        'work.center.hourly.entry',
+        string="Hourly Entry"
+    )
+
+    unit_weight_avg = fields.Float(
+        string="Unit Weight Average",
+        compute="_compute_unit_weight",
+        store=True
+    )
+
+    @api.depends('hourly_entry_id')
+    def _compute_unit_weight(self):
+        for rec in self:
+            if rec.hourly_entry_id:
+                rec.unit_weight_avg = rec.hourly_entry_id.weight_gm
+            else:
+                rec.unit_weight_avg = 0
+
+    @api.depends('workorder_id')
+    def _compute_machine(self):
+        for rec in self:
+            if rec.workorder_id:
+                rec.machine_id = rec.workorder_id.workcenter_id.id
+            elif rec.production_id.workorder_ids:
+                rec.machine_id = rec.production_id.workorder_ids[0].workcenter_id.id
+            else:
+                rec.machine_id = False
+
+    @api.depends('production_kg', 'error_set', 'unit_weight_avg')
+    def _compute_final_values(self):
+        for rec in self:
+
+            rec.final_production_kg = rec.production_kg - rec.error_set
+
+            if rec.unit_weight_avg:
+                rec.final_production_nos = rec.final_production_kg / rec.unit_weight_avg
+            else:
+                rec.final_production_nos = 0
+
+    @api.depends(
+        'hourly_target_qty',
+        'cavity',
+        'cycle_time_sec',
+        'mold_id.weight_gm'
+    )
+    def _compute_minimum_target(self):
+        for rec in self:
+
+            hourly = rec.hourly_target_qty or 0.0
+
+            unit_weight = (rec.mold_id.weight_gm or 0.0) / 1000.0
+
+            min_nos = hourly * 0.95
+
+            rec.minimum_target_nos = round(min_nos, 0)
+            rec.minimum_target_kg = round(min_nos * unit_weight, 2)
+
+    @api.depends('production_id', 'production_id.product_qty', 'total_produced_qty')
+    def _compute_remaining_qty(self):
+        for rec in self:
+            if rec.production_id:
+                total_produced = sum(
+                    self.search([
+                        ('production_id', '=', rec.production_id.id)
+                    ]).mapped('total_produced_qty')
+                )
+                rec.remaining_qty = max(
+                    rec.production_id.product_qty - total_produced, 0
+                )
+            else:
+                rec.remaining_qty = 0
+
+
     downtime_summary_ids = fields.One2many(
         'work.center.shift.downtime.summary',
         'shift_id',
@@ -180,9 +313,14 @@ class WCShift(models.Model):
         string='Total Pcs',
         tracking=True
     )
-
+   
     hourly_target_qty = fields.Float(string='Hourly Target (units/hr)', compute='_compute_hourly_target', store=True)
 
+    code = fields.Selection(
+        [('F', 'FS'), ('S', 'SS'), ('T', 'TS')],
+        string='Shift Code',
+        help='Code representing the shift (F, S, or T).'
+    )
 
     # =========================
     # ONCHANGE LOGIC
@@ -233,6 +371,7 @@ class WCShift(models.Model):
         ('uniq_mo_date_template', 'unique(production_id, date, template_id)',
          'A shift already exists for this MO, date, and template.')
     ]
+   
 
     @api.depends('production_id', 'date', 'template_id')
     def _compute_name(self):

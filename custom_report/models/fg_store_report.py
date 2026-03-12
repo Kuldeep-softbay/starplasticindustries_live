@@ -70,67 +70,88 @@ class FgStoreReportWizard(models.TransientModel):
 
         report_env = self.env['fg.store.report']
         computation_key = f"{self.env.uid}-{fields.Datetime.now()}"
+
         domain = self._build_domain()
         domain.append(('state', '=', 'done'))
 
-        move_lines = self.env['stock.move.line'].search(
-            domain,
-            order='date, id'
-        )
+        move_lines = self.env['stock.move.line'].search(domain, order='date, id')
 
-        balance = 0.0
+        lot_received_map = {}
+        issued_lines = []
 
         for ml in move_lines:
-            received = 0.0
-            issued = 0.0
-            dispatch_date = False
-
-            qty = ml.qty_done or 0.0
+            qty = ml.qty_done
             if not qty:
                 continue
 
             move = ml.move_id
-            if (
-                ml.location_dest_id.usage == 'internal'
-                and ml.location_id.usage != 'internal'
-            ):
-                received = qty
-            elif (
-                ml.location_id.usage == 'internal'
-                and ml.location_dest_id.usage != 'internal'
-            ):
-                issued = qty
+            product = ml.product_id
+            lot = ml.lot_id
+            picking = move.picking_id
+
+            # ---------- RECEIPT ----------
+            if ml.location_dest_id.usage == 'internal' and ml.location_id.usage != 'internal':
+                lot_key = lot.id or 0
+
+                data = lot_received_map.setdefault(lot_key, {
+                    'date': ml.date.date(),
+                    'partner_id': move.partner_id.id if move.partner_id else False,
+                    'batch_number': lot.name if lot else '',
+                    'pmemo': move.reference or '',
+                    'invoice_number': picking.invoice_number if picking else '',
+                    'unit_weight': product.weight or 0.0,
+                    'product_id': product.id,
+                    'received_qty': 0.0,
+                })
+
+                data['received_qty'] += qty
+
+            # ---------- ISSUE ----------
+            elif ml.location_id.usage == 'internal' and ml.location_dest_id.usage != 'internal':
                 dispatch_date = (
-                    move.picking_id.actual_dispatch_date
-                    if move.picking_id and move.picking_id.actual_dispatch_date
-                    else False
+                    picking.actual_dispatch_date
+                    if picking and picking.actual_dispatch_date
+                    else ml.date.date()
                 )
 
-            else:
-                continue
+                issued_lines.append({
+                    'date': dispatch_date,
+                    'partner_id': move.partner_id.id if move.partner_id else False,
+                    'batch_number': lot.name if lot else '',
+                    'pmemo': move.reference or '',
+                    'invoice_number': picking.invoice_number if picking else '',
+                    'unit_weight': product.weight or 0.0,
+                    'product_id': product.id,
+                    'issued_qty': qty,
+                })
 
-            # -------------------------------------------------
-            # BALANCE
-            # -------------------------------------------------
-            balance += (received - issued)
+        # Sort for correct running balance
+        received_vals = sorted(lot_received_map.values(), key=lambda x: x['date'])
+        issued_vals = sorted(issued_lines, key=lambda x: x['date'])
 
-            # -------------------------------------------------
-            # CREATE FG REPORT LINE (BATCH-WISE)
-            # -------------------------------------------------
-            report_env.create({
+        balance = 0.0
+
+        # ----- RECEIVED -----
+        for vals in received_vals:
+            balance += vals['received_qty']
+            vals.update({
                 'computation_key': computation_key,
-                'date': dispatch_date or ml.date.date(),
-                'partner_id': move.partner_id.id if move.partner_id else False,
-                'batch_number': ml.lot_id.name if ml.lot_id else '',
-                'pmemo': move.reference or '',
-                'invoice_number': move.picking_id.invoice_number if move.picking_id else '',
-                'unit_weight': ml.product_id.weight or 0.0,
-                'received_qty': received,
-                'issued_qty': issued,
+                'issued_qty': 0.0,
                 'balance_qty': balance,
-                'product_id': ml.product_id.id,
                 'stock_type': self.stock_type,
             })
+            report_env.create(vals)
+
+        # ----- ISSUED -----
+        for vals in issued_vals:
+            balance -= vals['issued_qty']
+            vals.update({
+                'computation_key': computation_key,
+                'received_qty': 0.0,
+                'balance_qty': balance,
+                'stock_type': self.stock_type,
+            })
+            report_env.create(vals)
 
         return {
             'type': 'ir.actions.act_window',

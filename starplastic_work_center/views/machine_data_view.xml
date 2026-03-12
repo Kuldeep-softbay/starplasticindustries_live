@@ -1,0 +1,127 @@
+<odoo>
+
+   <record id="machine_data_form_view" model="ir.ui.view">
+        <field name="name">machine.data.form</field>
+        <field name="model">machine.data</field>
+        <field name="arch" type="xml">
+
+            <form string="Machine Data">
+            <sheet>
+
+                <group>
+                    <field name="date"/>
+                    <field name="workcenter_id"/>
+                    <field name="product_id"/>
+                </group>
+
+                <!-- Injection Machine -->
+                <group string="Injaction Parameters"
+                    invisible="machine_type != 'injection'">
+
+                    <field name="ing_sec"/>
+                    <field name="ing_pressure"/>
+                    <field name="rlp_sec"/>
+                    <field name="rlp_pressure"/>
+                    <field name="cooling_sec"/>
+
+                    <field name="rm_feed"/>
+                    <field name="locking_tonnage"/>
+
+                </group>
+
+                <group string="Temperature Zones"
+                    invisible="machine_type != 'injection'">
+
+
+                    <field name="temp_zone_1"/>
+                    <field name="temp_zone_2"/>
+                    <field name="temp_zone_3"/>
+                    <field name="temp_zone_4"/>
+                    <field name="temp_zone_5"/>
+                    <field name="temp_zone_6"/>
+                    <field name="temp_zone_7"/>
+
+                </group>
+
+                <!-- Blow Moulding Machine -->
+                <group string="Blow Moulding Parameters"
+                    invisible="machine_type != 'blow_molding'">
+
+                    <field name="die_core_left"/>
+                    <field name="die_core_right"/>
+
+                    <field name="shooting_sec"/>
+                    <field name="blow_pin_delay"/>
+                    <field name="blow_delay"/>
+
+                    <field name="blowing_sec"/>
+                    <field name="exhaust_cooling"/>
+
+                    <field name="eject_time"/>
+
+                    <field name="m_close_p"/>
+                    <field name="m_close_f"/>
+
+                    <field name="tube_time"/>
+                    <field name="cutter_mode"/>
+                    <field name="cut_delay"/>
+                    <field name="cut_time"/>
+
+                </group>
+
+                <group string="Temperature"
+                    invisible="machine_type != 'blow_molding'">
+
+                    <field name="temp_1"/>
+                    <field name="temp_2"/>
+                    <field name="temp_3"/>
+                    <field name="temp_4"/>
+                    <field name="temp_5"/>
+                    <field name="temp_6"/>
+                    <field name="temp_7"/>
+                    <field name="temp_8"/>
+
+                </group>
+
+                <group>
+                    <field name="notes"/>
+                </group>
+
+            </sheet>
+
+        </form>
+
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_machine_data_list" model="ir.ui.view">
+        <field name="name">machine.data.list</field>
+        <field name="model">machine.data</field>
+        <field name="arch" type="xml">
+            <list string="Machine Data">
+                <field name="date"/>
+                <field name="name"/>
+                <field name="ing_sec"/>
+                <field name="cooling_sec"/>
+                <field name="locking_tonnage"/>
+            </list>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_machine_data" model="ir.actions.act_window">
+        <field name="name">Machine Data</field>
+        <field name="res_model">machine.data</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Menu -->
+    <menuitem id="menu_machine_data"
+              name="Machine Data"
+              parent="mrp.menu_mrp_configuration"
+              action="action_machine_data"/>
+
+</odoo>

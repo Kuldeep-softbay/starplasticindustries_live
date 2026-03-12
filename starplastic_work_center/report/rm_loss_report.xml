@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+<record id="view_rm_loss_report_tree" model="ir.ui.view">
+    <field name="name">rm.loss.report.list</field>
+    <field name="model">rm.loss.report</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="date"/>
+            <field name="product_id"/>
+            <field name="rm_type"/>
+            <field name="colour"/>
+            <field name="pmemo_number"/>
+            <field name="lot_id"/>
+            <field name="loss_kg"/>
+            <field name="loss_percent"/>
+        </list>
+    </field>
+</record>
+
+<record id="view_rm_loss_report_search" model="ir.ui.view">
+    <field name="name">rm.loss.report.search</field>
+    <field name="model">rm.loss.report</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="product_id"/>
+            <field name="rm_type"/>
+            <filter string="Today" name="today" domain="[('date', '=', context_today())]"/>
+            <filter string="This Month" name="month"
+                domain="[('date', '>=', context_today().strftime('%Y-%m-01'))]"/>
+        </search>
+    </field>
+</record>
+
+<record id="action_rm_loss_report" model="ir.actions.act_window">
+    <field name="name">RM Loss Report</field>
+    <field name="res_model">rm.loss.report</field>
+    <field name="view_mode">list</field>
+</record>
+
+<menuitem id="menu_rm_loss_report"
+          name="RM Loss Report"
+          parent="mrp.menu_mrp_reporting"
+          action="action_rm_loss_report"/>
+
+</odoo>

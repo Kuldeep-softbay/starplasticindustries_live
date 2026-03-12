@@ -1,0 +1,32 @@
+<odoo>
+<record id="view_running_cavity_tree" model="ir.ui.view">
+    <field name="name">running.cavity.summary.list</field>
+    <field name="model">running.cavity.summary</field>
+    <field name="arch" type="xml">
+        <list>
+            <field name="date" optional="show"/>
+            <field name="lot_id" optional="show"/>
+            <field name="machine_id" optional="show"/>
+            <field name="shift_display" optional="show"/>
+            <field name="product_id" optional="show"/>
+            <field name="supervisor_one_id" optional="show"/>
+            <field name="supervisor_two_id" optional="show"/>
+            <field name="running_cavity" optional="show"/>
+            <field name="mould_cavity" optional="show"/>
+            <field name="action" optional="show"/>
+            <field name="reason_id" optional="show"/>
+            <field name="action_by" optional="show"/>
+        </list>
+    </field>
+</record>
+
+<record id="action_running_cavity_summary" model="ir.actions.act_window">
+    <field name="name">Running Cavity Summary</field>
+    <field name="res_model">running.cavity.summary</field>
+    <field name="view_mode">list</field>
+</record>
+<menuitem id="menu_running_cavity_summary"
+          name="Running Cavity Summary"
+          parent="menu_admin_tolerance"
+          action="action_running_cavity_summary"/>
+</odoo>

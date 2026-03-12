@@ -9,5 +9,35 @@
       <field name="binding_model_id" ref="mrp.model_mrp_production"/>
       <field name="binding_type">report</field>
     </record>
-</odoo>
+<!-- 
+    <record id="action_report_delay_production" model="ir.actions.report">
+        <field name="name">Delay Production Report</field>
+        <field name="model">production.delay.action.log</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">starplastic_work_center.report_delay_production_template</field>
+        <field name="report_file">starplastic_work_center.report_delay_production_template</field>
+        <field name="print_report_name">'Delay Production'</field>
+    </record> -->
 
+
+  <record id="action_production_completion_memo_starplastic" model="ir.actions.report">
+      <field name="name">Production Completion Memo</field>
+      <field name="model">mrp.production</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="report_name">starplastic_work_center.production_completion_memo_template_starplastic</field>
+      <field name="report_file">starplastic_work_center.production_completion_memo_template_starplastic</field>
+      <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+      <field name="binding_type">report</field>
+  </record>
+
+    <record id="action_raw_material_issue_chit" model="ir.actions.report">
+        <field name="name">Raw Material Issue Chit</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">starplastic_work_center.raw_material_issue_chit_template</field>
+        <field name="report_file">starplastic_work_center.raw_material_issue_chit_template</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

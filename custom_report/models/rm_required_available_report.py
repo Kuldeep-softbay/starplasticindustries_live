@@ -98,18 +98,18 @@ class RmRequiredAvailableWizard(models.TransientModel):
             ('date', '<=', self._datetime_to()),
         ]
 
-        if self.product_id:
-            domain.append(('product_id', '=', self.product_id.id))
+        # if self.product_id:
+        #     domain.append(('product_id', '=', self.product_id.id))
 
-        if self.party_id:
-            domain.append(('party_id', '=', self.party_id.id))
+        # if self.party_id:
+        #     domain.append(('party_id', '=', self.party_id.id))
 
-        if self.location_id:
-            domain.extend([
-                '|',
-                ('location_id', '=', self.location_id.id),
-                ('location_dest_id', '=', self.location_id.id),
-            ])
+        # if self.location_id:
+        #     domain.extend([
+        #         '|',
+        #         ('location_id', '=', self.location_id.id),
+        #         ('location_dest_id', '=', self.location_id.id),
+        #     ])
 
         return domain
 

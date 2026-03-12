@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="starplastic_work_center.power_matrix_template">
+
+<div class="o_power_matrix p-4">
+
+    <h3 class="mb-3">Power Consumption Report</h3>
+
+    <table class="table table-bordered table-sm">
+        <thead class="table-light">
+
+            <!-- HEADER ROW 1 -->
+            <tr>
+                <th rowspan="2">Date</th>
+
+                <!-- Machine Names -->
+                <t t-set="machineCount" t-value="state.machines.length"/>
+
+                <t t-foreach="state.machines"
+                t-as="m"
+                t-key="m">
+                    <th class="text-center">
+                        <t t-esc="m"/>
+                    </th>
+                </t>
+
+                <th rowspan="2">Load 1 Unit</th>
+                <th rowspan="2">Remarks Load 1</th>
+                <th rowspan="2">Load 2 Unit</th>
+                <th rowspan="2">Remarks Load 2</th>
+                <th rowspan="2">Difference</th>
+                <th rowspan="2">Ideal Unit Used</th>
+                <th rowspan="2">Actual Unit Used</th>
+                <th rowspan="2">Meter Rd Kwh</th>
+            </tr>
+
+            <!-- HEADER ROW 2 (ONLY ONE COLUMN FOR PRODUCTION MIN) -->
+            <tr>
+                <th t-att-colspan="machineCount"
+                    class="text-center fw-bold">
+                    Production Min
+                </th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <!-- INIT TOTALS -->
+            <t t-set="machineTotals" t-value="state.machines.map(() => 0)"/>
+            <t t-set="totalLoad1" t-value="0"/>
+            <t t-set="totalRemark1" t-value="0"/>
+            <t t-set="totalLoad2" t-value="0"/>
+            <t t-set="totalRemark2" t-value="0"/>
+            <t t-set="totalIdeal" t-value="0"/>
+            <t t-set="totalActual" t-value="0"/>
+            <t t-set="totalMeter" t-value="0"/>
+
+            <!-- DATA ROWS -->
+            <t t-foreach="state.data" t-as="row" t-key="row.date">
+
+                <tr>
+
+                    <td><t t-esc="row.date"/></td>
+
+                    <!-- Machine Minutes -->
+                    <t t-foreach="row.machines"
+                       t-as="val"
+                       t-foreach-index="index"
+                       t-key="'m_' + index + '_' + row.date">
+
+                        <td class="text-end">
+                            <t t-set="safeVal" t-value="val || 0"/>
+                            <t t-esc="safeVal.toFixed(2)"/>
+                            <t t-set="machineTotals[index]"
+                               t-value="machineTotals[index] + safeVal"/>
+                        </td>
+
+                    </t>
+
+                    <!-- Load1 -->
+                    <td class="text-end">
+                        <t t-set="l1" t-value="row.load1 || 0"/>
+                        <t t-esc="l1.toFixed(2)"/>
+                        <t t-set="totalLoad1" t-value="totalLoad1 + l1"/>
+                    </td>
+
+                    <td class="text-end">
+                        <t t-set="l1" t-value="row.remark1 || 0"/>
+                        <t t-esc="l1.toFixed(2)"/>
+                        <t t-set="totalRemark1" t-value="totalRemark1 + l1"/>
+                    </td>
+
+
+                    <!-- Load2 -->
+                    <td class="text-end">
+                        <t t-set="l2" t-value="row.load2 || 0"/>
+                        <t t-esc="l2.toFixed(2)"/>
+                        <t t-set="totalLoad2" t-value="totalLoad2 + l2"/>
+                    </td>
+
+                    <td class="text-end">
+                        <t t-set="l2" t-value="row.remark2 || 0"/>
+                        <t t-esc="l2.toFixed(2)"/>
+                        <t t-set="totalRemark2" t-value="totalRemark2 + l2"/>
+                    </td>
+
+                    <!-- Difference -->
+                    <td class="text-end">
+                        <t t-esc="((row.actual || 0) - (row.ideal || 0)).toFixed(2)"/>
+                    </td>
+
+                    <!-- Ideal -->
+                    <td class="text-end">
+                        <t t-set="idealVal" t-value="row.ideal || 0"/>
+                        <t t-esc="idealVal.toFixed(2)"/>
+                        <t t-set="totalIdeal" t-value="totalIdeal + idealVal"/>
+                    </td>
+
+                    <!-- Actual -->
+                    <td class="text-end">
+                        <t t-set="actualVal" t-value="row.actual || 0"/>
+                        <t t-esc="actualVal.toFixed(2)"/>
+                        <t t-set="totalActual" t-value="totalActual + actualVal"/>
+                    </td>
+
+
+                    <!-- Meter -->
+                    <td class="text-end">
+                        <t t-set="meterVal" t-value="row.meter || 0"/>
+                        <t t-esc="meterVal.toFixed(2)"/>
+                        <t t-set="totalMeter" t-value="totalMeter + meterVal"/>
+                    </td>
+
+                </tr>
+
+            </t>
+
+            <!-- TOTAL ROW -->
+            <tr class="fw-bold bg-light">
+
+                <td>Total</td>
+
+                <!-- Machine Totals -->
+                <t t-foreach="machineTotals"
+                   t-as="mt"
+                   t-key="'total_' + mt">
+                    <td class="text-end">
+                        <t t-esc="mt.toFixed(2)"/>
+                    </td>
+                </t>
+
+                <!-- Load Totals -->
+                <td class="text-end">
+                    <t t-esc="totalLoad1.toFixed(2)"/>
+                </td>
+
+                <td class="text-end">
+                    <t t-esc="totalRemark1.toFixed(2)"/>
+                </td>
+
+                <td class="text-end">
+                    <t t-esc="totalLoad2.toFixed(2)"/>
+                </td>
+
+                <td class="text-end">
+                    <t t-esc="totalRemark2.toFixed(2)"/>
+                </td>
+
+                <!-- Difference -->
+                <td class="text-end">
+                    <t t-esc="(totalActual - totalIdeal).toFixed(2)"/>
+                </td>
+
+                <!-- Ideal -->
+                <td class="text-end">
+                    <t t-esc="totalIdeal.toFixed(2)"/>
+                </td>
+
+                <!-- Actual -->
+                <td class="text-end">
+                    <t t-esc="totalActual.toFixed(2)"/>
+                </td>
+
+
+                <!-- Meter -->
+                <td class="text-end">
+                    <t t-esc="totalMeter.toFixed(2)"/>
+                </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+
+</div>
+
+</t>
+
+</templates>

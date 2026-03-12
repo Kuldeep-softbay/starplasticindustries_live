@@ -8,3 +8,7 @@ class SaleOrderLine(models.Model):
         string='C.O Number',
         help='Customer Order Number for this line'
     )
+    wo_qty = fields.Float(
+        string='WO Qty',
+        help='Work Order Quantity for this line'
+    )

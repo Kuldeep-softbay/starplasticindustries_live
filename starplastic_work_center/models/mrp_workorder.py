@@ -5,6 +5,7 @@ import re
 class MrpWorkorder(models.Model):
     _inherit = 'mrp.workorder'
 
+    
     workcenter_id = fields.Many2one(
         'mrp.workcenter',
         string="Suitable Machine"
@@ -82,6 +83,7 @@ class JobPartyWork(models.Model):
     _name = 'job.party.work'
     _description = 'Job Party Work'
     _rec_name = 'name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
 
     name = fields.Char('Job Party Name')

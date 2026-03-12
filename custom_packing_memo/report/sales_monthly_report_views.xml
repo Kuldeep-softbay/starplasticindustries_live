@@ -1,3 +1,4 @@
+<!-- sales_monthly_report/views/sales_monthly_report_views.xml -->
 <odoo>
     <record id="view_sales_monthly_report_tree" model="ir.ui.view">
         <field name="name">sales.monthly.report.list</field>

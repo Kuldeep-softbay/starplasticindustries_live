@@ -69,6 +69,7 @@ class SaleOrder(models.Model):
             'summary': summary,
         }
 
+    
     def write(self, vals):
         res = super().write(vals)
 

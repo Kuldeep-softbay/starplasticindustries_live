@@ -11,7 +11,8 @@
                 class="oe_stat_button"
                 icon="fa-clock-o">
           <field name="hourly_entry_count" widget="statinfo" string="Hourly Entries"/>
-        </button></xpath>
+        </button>
+      </xpath>
     </field>
   </record>
 </odoo>

@@ -12,21 +12,21 @@ class ProductTemplate(models.Model):
 
     product_counting_type = fields.Selection([
         ('kg', 'Kg'),
-        ('unit', 'Unit'),
+        ('nos', 'Nos'),
     ], string="Product Counting Type")
 
     unit_weight_tolerance = fields.Float("Unit Weight Tolerance (+/-)")
     process = fields.Selection([
         ('blow', 'Blow molding'),
-        ('injection', 'Injection molding'),
-        ('blow_injection', 'Blow Injection molding'),
+        ('injaction', 'Injaction molding'),
+        ('blow_injection', 'Blow Injaction molding'),
         ('other', 'Other'),
     ], string="Process")
 
     rm_formulation = fields.Text("RM Formulation")
     packing_method = fields.Char("Packing Method")
     batch_number = fields.Char("Batch Number")
-
+    
     weight_gm = fields.Float(
         string="Weight (gm)",
         digits=(16, 2)

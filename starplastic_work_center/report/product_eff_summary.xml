@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_product_efficiency_summary_list" model="ir.ui.view">
+        <field name="name">product.efficiency.summary.list</field>
+        <field name="model">product.efficiency.summary</field>
+        <field name="arch" type="xml">
+            <list string="Product Efficiency Summary">
+                <field name="date"/>
+                <field name="product_id"/>
+                <field name="avg_weight"/>
+                <field name="cavity"/>
+                <field name="std_production"/>
+                <field name="std_cycle_time"/>
+                <field name="total_production_nos"/>
+                <field name="total_production_kg"/>
+                <field name="production_minutes"/>
+                <field name="production_hours"/>
+                <field name="actual_production_per_hour"/>
+                <field name="last_shutdown_reason_id"/>
+                <field name="shutdown_minutes"/>
+                <field name="efficiency"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_product_efficiency_summary_search" model="ir.ui.view">
+        <field name="name">product.efficiency.summary.search</field>
+        <field name="model">product.efficiency.summary</field>
+        <field name="arch" type="xml">
+            <search string="Search Product Efficiency">
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_product_efficiency_summary" model="ir.actions.act_window">
+        <field name="name">Product Efficiency Summary</field>
+        <field name="res_model">product.efficiency.summary</field>
+        <field name="view_mode">list,search</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_product_efficiency_summary"
+              name="Product Efficiency Summary"
+              parent="mrp.menu_mrp_reporting"
+              action="action_product_efficiency_summary"/>
+
+</odoo>

@@ -13,9 +13,9 @@
         <xpath expr="//page[@name='internal_notes']" position="attributes">
                 <attribute name="string">Packing Details</attribute>
         </xpath>
-        <notebook position="inside">
+        <!-- <notebook position="inside">
                 <page string="Party Master">
-
+                <field name="customer_type"/>
                     <group>
                         <group string="Primary Contact">
                             <field name="primary_contact_person"/>
@@ -46,7 +46,7 @@
                     </group>
 
                 </page>
-            </notebook>
+            </notebook> -->
         </field>
     </record>
 </odoo>

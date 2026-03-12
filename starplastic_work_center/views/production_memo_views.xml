@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mrp_production_form_pmemo_inherit" model="ir.ui.view">
+        <field name="name">mrp.production.form.pmemo.tab</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="P-Memo">
+
+                    <group string="Production Memo" col="4">
+                        <field name="date" readonly="1"/>
+                        <field name="pmemo_number"/>
+
+                        <field name="workcenter_id" readonly="1"/>
+                        <field name="product_id" readonly="1"/>
+
+                        <field name="rm_type" readonly="1"/>
+                        <field name="unit_weight" readonly="1"/>
+
+                        <field name="colour"/>
+                        <field name="lot_id" readonly="1"/>
+
+                        <field name="cavity" readonly="1"/>
+                        <field name="production_qty" readonly="1"/>
+                    </group>
+                    <separator string="Raw Material Formulation"/>
+                    <group col="4">
+                        <field name="rm_required_qty" readonly="1"/>
+                        <field name="rm_issued_qty" readonly="1"/>
+                        <field name="rm_to_be_made" readonly="1"/>
+                        <field name="rm_return_qty"/>
+
+                        <field name="rm_loss_qty" readonly="1"/>
+                        <field name="rm_loss_percent" readonly="1"/>
+                    </group>
+                    <separator string="Production Result"/>
+                    <group col="4">
+                        <field name="fg_weight" readonly="1"/>
+                        <field name="fg_qty" readonly="1"/>
+                        <field name="yeild_percent" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

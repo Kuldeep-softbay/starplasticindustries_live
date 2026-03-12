@@ -7,3 +7,4 @@ access_packing_memo_line_user,packing.memo.line user,model_packing_memo_line,bas
 access_packing_memo_wizard,packing.memo.wizard,model_packing_memo_wizard,base.group_user,1,1,1,1
 access_packing_memo_wizard_line,packing.memo.wizard.line,model_packing_memo_wizard_line,base.group_user,1,1,1,1
 custom_packing_memo.access_sales_monthly_report,access_sales_monthly_report,custom_packing_memo.model_sales_monthly_report,base.group_user,1,1,1,1
+

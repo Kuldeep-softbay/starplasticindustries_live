@@ -3,6 +3,7 @@ from odoo import api, fields, models
 class WorkCenterShiftSlot(models.Model):
     _name = 'work.center.shift.slot'
     _description = 'Work Center Shift Slot'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'sequence, id'
 
 

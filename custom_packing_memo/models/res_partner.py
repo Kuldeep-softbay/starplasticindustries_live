@@ -6,6 +6,7 @@ class ResPartner(models.Model):
     primary_contact_person = fields.Char(string="Contact Person")
     primary_contact_no = fields.Char(string="Contact No")
     primary_email = fields.Char(string="Email")
+    customer_type = fields.Char(string="Customer Type")
 
     secondary_contact_person = fields.Char(string="Contact Person")
     secondary_contact_no = fields.Char(string="Contact No")

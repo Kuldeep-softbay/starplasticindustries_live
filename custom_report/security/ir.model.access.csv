@@ -19,4 +19,7 @@ custom_report.access_dispatch_delay_reason,access_dispatch_delay_reason,custom_r
 custom_report.access_dispatch_delay_summary,access_dispatch_delay_summary,custom_report.model_dispatch_delay_summary,base.group_user,1,1,1,1
 custom_report.access_dispatch_delay_report,access_dispatch_delay_report,custom_report.model_dispatch_delay_report,base.group_user,1,1,1,1
 custom_report.access_dispatch_delay_reason_wizard,access_dispatch_delay_reason_wizard,custom_report.model_dispatch_delay_reason_wizard,base.group_user,1,1,1,1
+custom_report.access_batch_closing_report,access_batch_closing_report,custom_report.model_batch_closing_report,base.group_user,1,0,0,0
+
+
 

@@ -5,6 +5,8 @@ class WorkCenterHourlyEntry(models.Model):
     _name = 'work.center.hourly.entry'
     _description = 'Work Center Hourly Entry'
     _order = 'production_id, id'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
 
     production_id = fields.Many2one('mrp.production', string='Production Order', ondelete='cascade', tracking=True)
 
@@ -12,7 +14,7 @@ class WorkCenterHourlyEntry(models.Model):
         suffix = "AM" if hour_24 < 12 else "PM"
         hour_12 = 12 if hour_24 % 12 == 0 else hour_24 % 12
         return f"{hour_12} {suffix}"
-
+    
     def _selection_hour_slots(self):
         """Return selection options. If shift_id present in context, return only that shift's slots;
         otherwise return all 24 slots so the field is always selectable."""
@@ -111,6 +113,62 @@ class WorkCenterHourlyEntry(models.Model):
         digits=(16, 4)
         )
 
+    product_efficiency = fields.Float(
+        string="Product Efficiency (%)",
+        compute="_compute_efficiency",
+        store=True
+    )
+
+    worker_efficiency = fields.Float(
+        string="Worker Efficiency (%)",
+        compute="_compute_efficiency",
+        store=True
+    )
+
+    @api.depends(
+        'produced_qty_number',
+        'reject_qty_number',
+        'shift_id.hourly_target_qty',
+        'reason_line_ids.duration_minutes'
+    )
+    def _compute_efficiency(self):
+        for rec in self:
+
+            # -----------------------------
+            # PRODUCT EFFICIENCY
+            # -----------------------------
+            produced = rec.produced_qty_number or 0
+            rejected = rec.reject_qty_number or 0
+            good_qty = max(produced - rejected, 0)
+
+            target = rec.shift_id.hourly_target_qty or 0
+
+            if target > 0:
+                rec.product_efficiency = round((good_qty / target) * 100, 2)
+            else:
+                rec.product_efficiency = 0.0
+
+            # -----------------------------
+            # WORKER EFFICIENCY
+            # -----------------------------
+            produced_qty = rec.produced_qty_number or 0
+            downtime = sum(rec.reason_line_ids.mapped('duration_minutes')) or 0
+
+            available_time = max(60 - downtime, 0)
+
+            if available_time > 0:
+                actual_hourly_production = (produced_qty / available_time) * 60
+            else:
+                actual_hourly_production = 0
+
+            target_hourly = rec.shift_id.hourly_target_qty or 0
+
+            if target_hourly > 0:
+                rec.worker_efficiency = round(
+                    (actual_hourly_production / target_hourly) * 100, 2
+                )
+            else:
+                rec.worker_efficiency = 0.0
 
     @api.depends('weight_gm')
     def _compute_unit_weight(self):
@@ -183,7 +241,7 @@ class WorkCenterHourlyEntry(models.Model):
                         'message': 'Selected time slot is not within shift hours.'
                     }
                 }
-
+    
     @api.constrains('shift_id', 'time')
     def _check_time_slot(self):
         """Ensure time slot is within shift hours"""
@@ -201,7 +259,7 @@ class WorkCenterHourlyEntry(models.Model):
                 ]
                 if rec.production_id:
                     domain.append(('production_id', '=', rec.production_id.id))
-
+                
                 if self.search_count(domain):
                     raise ValidationError(_("This time slot is already taken for this shift."))
 
@@ -209,6 +267,8 @@ class WorkCenterHourlyEntryReasonLine(models.Model):
     _name = 'work.center.hourly.entry.reason.line'
     _description = 'Hourly Entry Reason (Persistent)'
     _order = 'id'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
 
     hourly_entry_id = fields.Many2one(
         'work.center.hourly.entry',
@@ -224,3 +284,4 @@ class WorkCenterHourlyEntryReasonLine(models.Model):
         domain="[('reason_id','=',reason_id)]",
     )
     actual_time_minutes = fields.Float('Actual Time (min)')
+    explanation = fields.Char(string="Explanation")

@@ -9,3 +9,4 @@ from . import stock_picking
 from . import fg_work_order_wise_report
 from . import dispatch_delay_report_summery
 from . import dispatch_delay_report
+from . import batch_clossing_report

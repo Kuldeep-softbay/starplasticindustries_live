@@ -10,7 +10,7 @@
         <field name="time" optional="show"/>
         <field name="operator_one_id" optional="show"/>
         <field name="operator_two_id" optional="show"/>
-        <field name="unit_weight" optional="show"/>
+        <field name="weight_gm" optional="show"/>
         <field name="rejection_reason" optional="show"/>
         <field name="shut_down" optional="show"/>
         <field name="produced_weight_kg" optional="show"/>
@@ -20,8 +20,10 @@
         <field name="actual_cycle_time" optional="show"/>
         <field name="qc_check" optional="show"/>
         <field name="state" widget="badge" optional="show"/>
-        <field name="create_date" optional="show"/>
-        <field name="create_uid" optional="show"/>
+        <field name="product_efficiency" optional="show"/>
+        <field name="worker_efficiency" optional="show"/>
+        <field name="create_date" optional="hide"/>
+        <field name="create_uid" optional="hide"/>
       </list>
     </field>
   </record>
@@ -32,10 +34,10 @@
     <field name="model">work.center.hourly.entry.reason.line</field>
     <field name="arch" type="xml">
       <list editable="bottom">
-        <field name="reason_id"/>
+        <field name="reason_id" options="{'no_create': True, 'no_create_edit': True}"/>
         <field name="duration_minutes"/>
         <field name="sub_reason_id"/>
-        <field name="actual_time_minutes"/>
+        <field name="explanation"/>
       </list>
     </field>
   </record>
@@ -69,6 +71,8 @@
               <field name="weight_gm"/>
               <field name="unit_weight"/>
               <field name="rejection_reason"/>
+              <field name="product_efficiency"/>
+              <field name="worker_efficiency"/>
             </group>
             <group string="Production">
               <field name="produced_weight_kg"/>
@@ -87,7 +91,40 @@
                    views="[(list, ref('starplastic_work_center.view_work_center_hourly_entry_reason_list_inline'))]"/>
           </group>
         </sheet>
+        <chatter>
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </chatter>
       </form>
+    </field>
+  </record>
+
+  <record id="view_work_center_downtime_reason_form" model="ir.ui.view">
+    <field name="name">wc.downtime.reason.form</field>
+    <field name="model">wc.downtime.reason</field>
+    <field name="arch" type="xml">
+      <form>
+        <sheet>
+          <group>
+            <field name="code"/>
+            <field name="name"/>
+            <field name="affect_product_efficiency"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_work_center_downtime_reason_list" model="ir.ui.view">
+    <field name="name">wc.downtime.reason.list</field>
+    <field name="model">wc.downtime.reason</field>
+    <field name="arch" type="xml">
+      <list>
+        <field name="code"/>
+        <field name="name"/>
+        <field name="affect_product_efficiency"/>
+      </list>
     </field>
   </record>
 
@@ -99,10 +136,17 @@
       <form>
         <sheet>
           <group>
-            <field name="reason_id"/>
             <field name="name"/>
+            <field name="code"/>
+            <field name="reason_code"/>
+            <field name="machine_type"/>
           </group>
         </sheet>
+        <chatter>
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </chatter>
       </form>
     </field>
   </record>
@@ -113,7 +157,9 @@
     <field name="arch" type="xml">
       <list>
         <field name="name"/>
-        <field name="reason_id"/>
+        <field name="code"/>
+        <field name="reason_code"/>
+        <field name="machine_type"/>
       </list>
     </field>
   </record>

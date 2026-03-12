@@ -9,7 +9,7 @@
         {'search_default_current_month': 1}
     </field>
     </record>
-
+    
 <menuitem id="menu_purchase_monthly_report"
               name="Purchase Monthly Stock Report"
               parent="purchase.purchase_report_main"

@@ -1,0 +1,47 @@
+<odoo>
+
+  <record id="view_machine_efficiency_summary_tree" model="ir.ui.view">
+    <field name="name">machine.efficiency.summary.list</field>
+    <field name="model">mrp.machine.efficiency.summary</field>
+    <field name="arch" type="xml">
+      <list>
+    <field name="machine_id"/>
+
+    <field name="no_machine_mould_change"/>
+    <field name="mould_change_problem"/>
+    <field name="water_problem"/>
+    <field name="interior_quality_problem"/>
+    <field name="no_raw_material"/>
+    <field name="no_operator"/>
+    <field name="no_power"/>
+    <field name="other_problem"/>
+    <field name="mould_change"/>
+    <field name="barrel_clean"/>
+    <field name="hand_processing_problem"/>
+    <field name="insert_change"/>
+    <field name="mould_service"/>
+    <field name="machine_service"/>
+    <field name="rm"/>
+    <field name="mould_production_setting"/>
+    <field name="no_production_plan"/>
+
+    <field name="production_minutes"/>
+    <field name="working_minutes"/>
+    <field name="efficiency"/>
+
+      </list>
+    </field>
+  </record>
+
+  <record id="action_machine_efficiency_summary" model="ir.actions.act_window">
+    <field name="name">Machine Efficiency Summary</field>
+    <field name="res_model">mrp.machine.efficiency.summary</field>
+    <field name="view_mode">list</field>
+  </record>
+
+  <menuitem id="menu_mrp_reporting_efficiency_summary"
+            name="Machine Efficiency Summary"
+            parent="mrp.menu_mrp_reporting"
+            action="action_machine_efficiency_summary"/>
+
+</odoo>

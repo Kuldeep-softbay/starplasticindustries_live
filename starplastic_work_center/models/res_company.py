@@ -19,3 +19,8 @@ class ResCompany(models.Model):
     rm_grade_report_footer_image = fields.Binary(string="RM Grade Report Footer")
     rm_stock_sheet_report_header_image = fields.Binary(string="FG Stock Sheet Report Header")
     rm_stock_sheet_report_footer_image = fields.Binary(string="FG Stock Sheet Report Footer")
+    delay_report_header = fields.Binary(string="Delay Report Header")
+    production_completion_header = fields.Binary(
+            string="Production Completion Memo Header"
+        )
+    production_delay_header = fields.Binary(string="Production Delay Header")

@@ -88,6 +88,8 @@ class RmGradeWiseStockWizard(models.TransientModel):
         )
 
     def _get_grade_name(self, product):
+        if not product:
+            return ''
         return ", ".join(
             product.product_template_variant_value_ids.mapped('name')
         )
@@ -158,38 +160,92 @@ class RmGradeWiseStockWizard(models.TransientModel):
         Report = self.env['rm.grade.wise.stock.report']
         Move = self.env['stock.move']
 
+        # Remove previous report records
+        Report.search([
+            ('computation_key', 'like', f"{self.env.uid}-")
+        ]).unlink()
+
         computation_key = f"{self.env.uid}-{fields.Datetime.now()}"
         balance = self._compute_opening_balance()
 
         moves = Move.search(self._base_domain(), order='date,id')
 
         for mv in moves:
-            received = issued = 0.0
-            qty = mv.product_uom_qty
 
-            if mv.location_dest_id.usage == 'internal' and mv.location_id.usage != 'internal':
+            received = 0.0
+            issued = 0.0
+
+            qty = sum(mv.move_line_ids.mapped('qty_done')) or mv.product_uom_qty
+
+            src = mv.location_id
+            dest = mv.location_dest_id
+
+            # --------------------------------------------------
+            # PURCHASE RECEIPT
+            # --------------------------------------------------
+            if src.usage == 'supplier' and dest.usage == 'internal':
                 received = qty
-            elif mv.location_id.usage == 'internal':
+
+            # --------------------------------------------------
+            # MANUFACTURING MOVES
+            # --------------------------------------------------
+            elif mv.raw_material_production_id:
+
+                # Issue → Stock → Production
+                if dest.usage == 'production':
+                    issued = qty
+
+                # Return → Production → Stock
+                elif src.usage == 'production' and dest.usage == 'internal':
+                    received = qty
+
+            # --------------------------------------------------
+            # DELIVERY
+            # --------------------------------------------------
+            elif src.usage == 'internal' and dest.usage == 'customer':
                 issued = qty
 
+            # --------------------------------------------------
+            # BALANCE UPDATE
+            # --------------------------------------------------
             balance += (received - issued)
+
+            # -------- PARTICULARS --------
+            if mv.raw_material_production_id:
+                particulars = 'Production'
+            elif mv.production_id:
+                particulars = 'Production'
+            elif mv.picking_id:
+                particulars = mv.picking_id.name
+            else:
+                particulars = mv.reference or ''
+
             lot_name = mv.move_line_ids[:1].lot_id.name if mv.move_line_ids else False
 
+            main_product = False
+
+            if mv.raw_material_production_id:
+                main_product = mv.raw_material_production_id.product_id
+            elif mv.production_id:
+                main_product = mv.production_id.product_id
+            elif hasattr(mv, 'party_id') and mv.party_id:
+                main_product = mv.party_id.product_id
+
+            product_id_value = main_product.id if main_product and main_product.exists() else False
 
             Report.create({
                 'computation_key': computation_key,
                 'date': mv.date.date(),
-                'particulars': mv.picking_id.name,
-                'product_id': mv.product_id.id,
-                'rm_type': mv.product_id.product_tmpl_id.id,
+                'particulars': particulars,
+                'product_id': product_id_value,
                 'batch': lot_name or '',
-                'rm_grade_name': self._get_grade_name(mv.product_id),
-                'vendor_id': mv.picking_id.partner_id.id,
+                'rm_grade_name': self._get_grade_name(main_product) if main_product else '',
+                'vendor_id': mv.picking_id.partner_id.id if mv.picking_id else False,
                 'invoice_no': mv.picking_id.invoice_number if mv.picking_id else '',
                 'received_qty': received,
                 'issue_qty': issued,
                 'balance_qty': balance,
-                'pmemo_no': mv.picking_id.name,
+                'pmemo_no': mv.picking_id.name if mv.picking_id else '',
             })
 
         return {

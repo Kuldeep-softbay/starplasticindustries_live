@@ -9,3 +9,8 @@ from . import mrp_shift_management
 from . import mrp_workcenter_shift
 from . import res_company
 from . import sale_order_line
+from . import production_memo
+from . import machine_data
+from . import mrp_rm_return
+from . import power_cunsuption
+from . import hr_employee

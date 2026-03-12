@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_error_set_tolerance_summary_tree" model="ir.ui.view">
+        <field name="name">error.set.tolerance.summary.list</field>
+        <field name="model">error.set.tolerance.summary</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date" optional="show"/>
+                <field name="workorder_no" optional="show"/>
+                <field name="machine_id" optional="show"/>
+                <field name="shift_display" string="Shift" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="production_kg_workshop" optional="show"/>
+                <field name="production_kg_store" optional="show"/>
+                <field name="difference_kg" optional="show"/>
+                <field name="difference_percent" optional="show"/>
+                <field name="action" optional="show"/>
+                <field name="reason_id" optional="show"/>
+                <field name="action_by" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_error_set_tolerance_summary" model="ir.actions.act_window">
+        <field name="name">Error Set Tolerance Summary</field>
+        <field name="res_model">error.set.tolerance.summary</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_error_set_tolerance_summary"
+              name="Error Set Tolerance Summary"
+              parent="menu_admin_tolerance"
+              action="action_error_set_tolerance_summary"
+              sequence="30"/>
+
+</odoo>

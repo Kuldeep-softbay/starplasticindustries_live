@@ -99,7 +99,6 @@ class RmStockSheetWizard(models.TransientModel):
         for ml in move_lines:
             product = ml.product_id
             tmpl = product.product_tmpl_id
-            picking = ml.move_id.picking_id
 
             if not (tmpl.purchase_ok and not tmpl.sale_ok):
                 continue
@@ -118,28 +117,24 @@ class RmStockSheetWizard(models.TransientModel):
             else:
                 continue
 
-            mfi = ''
-            batch = ''
-
-            if picking:
-                mfi_val = getattr(picking, 'mfi_value', None)
-                batch_val = getattr(picking, 'supplier_batch_number', None)
-
-                mfi = str(mfi_val).strip() if mfi_val not in (None, False) else ''
-                batch = str(batch_val).strip() if batch_val not in (None, False) else ''
-
             grade = self._get_grade(product)
             internal_batch = ml.lot_id.name if ml.lot_id else ''
 
+            supplier_batch = ''
+            mfi = ''
+
+            if ml.move_id.picking_id:
+                supplier_batch = ml.move_id.picking_id.supplier_batch_number
+                mfi = ml.move_id.picking_id.mfi_value
             key = (tmpl.id, grade, internal_batch)
 
             if key not in aggregated:
                 aggregated[key] = {
                     'rm_type': tmpl,
                     'grade': grade,
-                    'mfi': mfi,
-                    'batch': batch,
                     'internal_batch': internal_batch,
+                    'supplier_batch': supplier_batch,
+                    'mfi': mfi,
                     'party': ml.move_id.party_id,
                     'kgs': 0.0,
                 }
@@ -165,7 +160,7 @@ class RmStockSheetWizard(models.TransientModel):
                 'rm_type': data['rm_type'].id,
                 'grade': data['grade'],
                 'mfi': data['mfi'],
-                'batch': data['batch'],
+                'batch': data['supplier_batch'],
                 'internal_batch': data['internal_batch'],
                 'bag_qty': bags,
                 'kgs': data['kgs'],

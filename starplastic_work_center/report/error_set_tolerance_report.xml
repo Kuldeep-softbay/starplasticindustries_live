@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_error_set_tolerance_tree" model="ir.ui.view">
+        <field name="name">error.set.tolerance.report.list</field>
+        <field name="model">error.set.tolerance.report</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="date" optional="show"/>
+                <field name="workorder_no" optional="show"/>
+                <field name="product_id" optional="show"/>
+                <field name="workcenter_id" optional="show"/>
+                <field name="shift_display" string="Shift" optional="show"/>
+                <field name="production_kg_workshop" optional="show"/>
+                <field name="production_kg_store" optional="show"/>
+                <field name="difference_kg" optional="show"/>
+                <field name="difference_percent" optional="show"/>
+                <button name="action_hide"
+                        type="object"
+                        string="Hide"
+                        class="btn-primary"/> 
+           </list>
+        </field>
+    </record>
+
+    <record id="view_error_set_tolerance_reason_wizard_form"
+            model="ir.ui.view">
+        <field name="name">error.set.tolerance.reason.wizard.form</field>
+        <field name="model">error.set.tolerance.reason.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Acknowledge Error Set Tolerance">
+                <group>
+                    <field name="reason_id" required="1"/>
+                    <field name="action"/>
+                </group>
+                <footer>
+                    <button name="action_confirm"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel"
+                            special="cancel"
+                            class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_error_set_tolerance_report"
+            model="ir.actions.act_window">
+        <field name="name">Error Set Tolerance</field>
+        <field name="res_model">error.set.tolerance.report</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_error_set_tolerance_report"
+              name="Error Set Tolerance"
+              parent="menu_admin_tolerance"
+              action="action_error_set_tolerance_report"
+              sequence="20"/>
+
+</odoo>

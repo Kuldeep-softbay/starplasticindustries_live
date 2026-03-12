@@ -1,0 +1,53 @@
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_machine_data_report_list" model="ir.ui.view">
+        <field name="name">machine.data.report.list</field>
+        <field name="model">machine.data.report</field>
+        <field name="arch" type="xml">
+            <list string="Machine Data Report">
+
+                <field name="date"/>
+                <field name="workcenter_id"/>
+                <field name="product_id"/>
+
+                <field name="ing_sec"/>
+                <field name="ing_pressure"/>
+
+                <field name="rlp_sec"/>
+                <field name="rlp_pressure"/>
+
+                <field name="cooling_sec"/>
+                <field name="rm_feed"/>
+                <field name="locking_tonnage"/>
+
+                <field name="temp_zone_1"/>
+                <field name="temp_zone_2"/>
+                <field name="temp_zone_3"/>
+                <field name="temp_zone_4"/>
+                <field name="temp_zone_5"/>
+                <field name="temp_zone_6"/>
+                <field name="temp_zone_7"/>
+
+                <field name="notes"/>
+
+            </list>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_machine_data_report"
+            model="ir.actions.act_window">
+        <field name="name">Machine Data Report</field>
+        <field name="res_model">machine.data.report</field>
+        <field name="view_mode">list</field>
+    </record>
+
+
+    <!-- Menu -->
+    <menuitem id="menu_machine_data_report"
+              name="Machine Data Report"
+              parent="mrp.menu_mrp_reporting"
+              action="action_machine_data_report"/>
+
+</odoo>

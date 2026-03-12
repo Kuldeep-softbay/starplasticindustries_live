@@ -36,6 +36,20 @@ class FgWorkOrderReport(models.Model):
     @api.depends("opening_qty", "production_qty", "dispatch_qty")
     def _compute_closing_qty(self):
         for rec in self:
-            print(f"Computing closing_qty for product_id={rec.product_id.id}: opening_qty={rec.opening_qty}, production_qty={rec.production_qty}, dispatch_qty={rec.dispatch_qty}")
             closing = (rec.opening_qty or 0.0) + (rec.production_qty or 0.0) - (rec.dispatch_qty or 0.0)
             rec.closing_qty = closing if closing > 0.0 else 0.0
+
+
+
+class ResConfigSettings(models.TransientModel):
+    _inherit = 'res.config.settings'
+
+    stock_move_sms_validation = fields.Boolean(
+        string="SMS Validation on Stock Moves",
+        config_parameter="custom_report.stock_move_sms_validation",
+    )
+    # stock_sms_confirmation_template_id = fields.Many2one(
+    #     "mail.template",
+    #     string="SMS Confirmation Template",
+    #     config_parameter="custom_report.stock_sms_confirmation_template_id",
+    # )

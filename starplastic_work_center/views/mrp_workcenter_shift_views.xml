@@ -30,6 +30,11 @@
             <field name="sequence"/>
           </group>
         </sheet>
+        <chatter>
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </chatter>
       </form>
     </field>
   </record>
@@ -58,6 +63,9 @@
         <field name="hourly_target_qty"/>
         <field name="state"/>
         <field name="total_produced_qty"/>
+        <field name="minimum_target_nos"/>
+        <field name="minimum_target_kg"/>
+        <field name="remaining_qty"/>
       </list>
     </field>
   </record>
@@ -80,6 +88,9 @@
               <field name="template_id"/>
               <field name="supervisor_one_id"/>
               <field name="supervisor_two_id"/>
+              <field name="remaining_qty"/>
+              <field name="minimum_target_nos"/>
+              <field name="minimum_target_kg"/>
             </group>
             <group string="Setup">
               <field name="mold_id"/>
@@ -107,6 +118,11 @@
             </field>
         </group>
         </sheet>
+        <!-- <chatter>
+            <field name="message_follower_ids"/>
+            <field name="activity_ids"/>
+            <field name="message_ids"/>
+        </chatter> -->
       </form>
     </field>
   </record>
@@ -134,4 +150,5 @@
             parent="menu_shop_floor_config_root"
             action="action_wc_shift"
             sequence="6"/>
+
 </odoo>

@@ -27,7 +27,7 @@
         <xpath expr="//field[@name='time_mode']" position="before">
             <field name="cycle_time_tolerance"/>
             <field name="cycle_time_manual_seconds"/>
-        </xpath>
+        </xpath>   
       </field>
     </record>
 
@@ -47,7 +47,7 @@
                 <attribute name="optional">show</attribute>
         </xpath>
         <xpath expr="//list/field[@name='name']" position="after">
-          <field name="standard_cycle_time" optional="show"/>
+          <!-- <field name="standard_cycle_time" optional="show"/> -->
           <field name="cycle_time" optional="show"/>
           <field name="cavity" optional="show"/>
           <field name="standard_cycle_time_hourly" optional="show"/>

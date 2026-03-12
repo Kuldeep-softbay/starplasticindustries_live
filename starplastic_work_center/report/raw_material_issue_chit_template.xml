@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="raw_material_issue_chit_template">
+
+    <t t-call="web.html_container">
+        <t t-foreach="docs" t-as="picking">
+
+            <div class="page" style="font-size:12px;">
+
+                <table border="1"
+                       style="width:100%; border-collapse:collapse;">
+
+                    <tr>
+                        <td colspan="2"
+                            style="text-align:center; font-weight:bold;">
+                            Raw Material Issue CHIT Label
+                        </td>
+                    </tr>
+
+                    <t t-set="production"
+                            t-value="env['mrp.production'].search([('name','=',picking.origin)], limit=1)"/>
+                    <tr>
+                        <td><b>Item Name</b></td>
+                        <td>
+                            <span t-esc="production.product_id.name"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Machine Name</b></td>
+                        <td>
+                            <span t-esc="production.workorder_ids and production.workorder_ids[0].workcenter_id.name or ''"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>M/C No</b></td>
+                        <td>
+                            <span t-esc="production.workorder_ids and production.workorder_ids[0].workcenter_id.machine_no or ''"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Item Code</b></td>
+                        <td><span t-esc="production.lot_producing_id.name"/></td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Date</b></td>
+                        <td>
+                            <span t-esc="picking.date_done and picking.date_done.strftime('%d-%m-%Y') or (picking.scheduled_date and picking.scheduled_date.strftime('%d-%m-%Y'))"/>
+                        </td>
+                    </tr>
+
+                    <t t-set="first_move"
+                        t-value="picking.move_ids_without_package and picking.move_ids_without_package[0] or False"/>
+
+                    <tr>
+                        <td><b>Material Name/COLOUR</b></td>
+                        <td>
+                            <span t-esc="first_move.product_id.name if first_move else '-'"/>
+                            /
+                            <!-- <span t-esc="', '.join(first_move.product_id.product_template_attribute_value_ids.mapped('name')) if first_move else '-'"/> -->
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>Batch No.</b></td>
+                        <td>
+                            <span t-esc="first_move and ', '.join(first_move.move_line_ids.mapped('lot_id.name')) or '-'"/>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><b>RM Issue Sheet No</b></td>
+                        <td t-esc="picking.name or '-'"/>
+                    </tr>
+                </table>
+
+                <br/>
+
+                <table border="1"
+                       style="width:100%; border-collapse:collapse; text-align:center;">
+
+                    <tr style="font-weight:bold; background-color:#f2f2f2;">
+                        <td>Qty/Kg</td>
+                        <td>Total/Kg</td>
+                        <td>RM Type</td>
+                        <td>Grade</td>
+                        <td>S Batch</td>
+                        <td>I Batch</td>
+                        <td>MFI</td>
+                    </tr>
+
+                    <t t-foreach="picking.move_ids_without_package" t-as="move">
+                        <tr>
+                            <td t-esc="move.product_uom_qty"/>
+                            <td>
+                                <t t-set="done_qty"
+                                   t-value="sum(move.move_line_ids.mapped('qty_done'))"/>
+                                <span t-esc="done_qty"/>
+                            </td>
+
+                            <td t-esc="move.product_id.name or '-'"/>
+
+                            <td t-esc="move.product_grade or '-'"/>
+
+                            <td>
+                            <t t-set="lot" t-value="move.move_line_ids and move.move_line_ids[0].lot_id"/>
+                            <t t-if="lot">
+                                <t t-set="receipt_line"
+                                    t-value="env['stock.move.line'].search([
+                                        ('lot_id','=',lot.id),
+                                        ('picking_id.picking_type_id.code','=','incoming')
+                                    ], limit=1)"/>
+
+                                <!-- Supplier Batch -->
+                                <span t-esc="receipt_line.picking_id.supplier_batch_number or '-'"/>
+                            </t>
+                            <t t-if="not lot">-</t>
+                        </td>
+                            <td t-esc="', '.join(move.move_line_ids.mapped('lot_id.name')) if move.move_line_ids else '-'"/>
+                            <td>
+                                <t t-set="lot" t-value="move.move_line_ids and move.move_line_ids[0].lot_id"/>
+                                <t t-if="lot">
+                                    <t t-set="receipt_line"
+                                    t-value="env['stock.move.line'].search([
+                                            ('lot_id','=',lot.id),
+                                            ('picking_id.picking_type_id.code','=','incoming')
+                                    ], limit=1)"/>
+                                    <span t-esc="receipt_line.picking_id.mfi_value or '-'"/>
+                                </t>
+                                <t t-if="not lot">-</t>
+                            </td>
+                     </tr>
+
+                    </t>
+
+                </table>
+
+            </div>
+
+        </t>
+    </t>
+
+</template>
+
+</odoo>

@@ -1,0 +1,13 @@
+<odoo>
+
+    <record id="action_power_matrix_view" model="ir.actions.client">
+        <field name="name">Power Consumption Report</field>
+        <field name="tag">power_consumption_matrix_view</field>
+    </record>
+
+    <menuitem id="menu_power_matrix"
+              name="Power Consumption Report"
+              parent="mrp.menu_mrp_reporting"
+              sequence="50"/>
+
+</odoo>

@@ -166,6 +166,8 @@ class RmRealStoreBookWizard(models.TransientModel):
         return opening
 
     def _get_grade_name(self, product):
+        if not product:
+            return ''
         return ", ".join(
             product.product_template_variant_value_ids.mapped('name')
         )
@@ -208,14 +210,23 @@ class RmRealStoreBookWizard(models.TransientModel):
                     production = qty
 
             balance += (received - production)
+            main_product = False
+            if mv.raw_material_production_id:
+                main_product = mv.raw_material_production_id.product_id
+            elif mv.production_id:
+                main_product = mv.production_id.product_id
+            # elif hasattr(mv, 'party_id') and mv.party_id and mv.party_id.product_id:
+            #     main_product = mv.party_id.product_id
+
+            product_id_value = main_product.id if main_product and main_product.exists() else False
 
             Report.create({
                 'computation_key': computation_key,
                 'date': mv.date.date(),
                 'particulars': mv.picking_id.origin if mv.picking_id else ' ',
-                'product_id': mv.product_id.id,
+                'product_id': product_id_value,
                 'batch': mv.picking_id.internal_batch_number if mv.picking_id else '',
-                'grade': self._get_grade_name(mv.product_id),
+                'grade': self._get_grade_name(main_product) if main_product else '',
                 'vendor_id': mv.partner_id.id
                              if mv.partner_id else
                              (mv.picking_id.partner_id.id if mv.picking_id else False),

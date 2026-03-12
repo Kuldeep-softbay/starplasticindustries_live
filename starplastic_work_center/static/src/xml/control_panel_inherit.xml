@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mrp_workorder.ControlPanelButtons"
+       t-inherit-mode="extension">
+
+        <xpath expr="//div[contains(@class,'position-sticky')]" position="after">
+            <div class="position-sticky top-0 end-0 bg-view ms-2">
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        t-on-click="() => this.onClickShiftHourEntry()">
+                    <i class="fa fa-clock-o me-1"/>
+                    Shift / Hour Entry
+                </button>
+            </div>
+        </xpath>
+
+    </t>
+
+</templates>

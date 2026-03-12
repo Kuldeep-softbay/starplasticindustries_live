@@ -11,7 +11,7 @@
 
     <menuitem id="menu_fg_store_report"
               name="FG Stock Report"
-              parent="menu_fg_reports"
+              parent="menu_fg_reports" 
               action="action_fg_store_report_wizard"/>
     <menuitem id="fg_work_order_report"
               name="FG Stock Work Order Report"
@@ -19,7 +19,7 @@
               action="action_fg_work_order_report_wizard"/>
     <menuitem id="menu_rm_grade_wise_stock_report"
               name="RM Grade Wise Stock Report"
-              parent="menu_rm_reports"
+              parent="menu_rm_reports" 
               action="action_rm_grade_wise_stock_wizard"/>
     <menuitem id="menu_rm_real_store_book_report"
               name="RM Red Stock Book Report"
@@ -27,7 +27,7 @@
               action="action_rm_real_store_book_wizard"/>
     <menuitem id="menu_rm_required_available_report"
               name="RM Required and Available Report"
-              parent="menu_rm_reports"
+              parent="menu_rm_reports" 
               action="action_rm_required_available_wizard"/>
     <menuitem id="menu_rm_stock_sheet_report"
               name="RM Stock Sheet Report"
@@ -46,3 +46,4 @@
               parent="menu_dispatch_delay_reports"
               action="action_dispatch_delay_report"/>
 </odoo>
+    
