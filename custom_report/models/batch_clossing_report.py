@@ -39,9 +39,8 @@ class BatchClosingReport(models.Model):
                     0.0 AS cut_pcs,
                     0.0 AS short_qty,
 
-                    mo.product_qty AS wo_qty,
-
-                    COALESCE(SUM(sml.quantity), 0) AS production_qty,
+                    mo.wo_qty AS wo_qty,
+                    mo.production_qty AS production_qty,
 
                     COALESCE(SUM(
                         CASE 
@@ -53,16 +52,16 @@ class BatchClosingReport(models.Model):
 
                 FROM mrp_production mo
 
-                /* Ensure product exists */
+                /* Product */
                 INNER JOIN product_product pp
                     ON pp.id = mo.product_id
 
-                /* Production Move */
+                /* Production Moves */
                 INNER JOIN stock_move sm
                     ON sm.production_id = mo.id
                     AND sm.state = 'done'
 
-                /* Production Move Lines (must have lot) */
+                /* Production Move Lines */
                 INNER JOIN stock_move_line sml
                     ON sml.move_id = sm.id
                     AND sml.lot_id IS NOT NULL
@@ -92,7 +91,8 @@ class BatchClosingReport(models.Model):
                     lot.id,
                     mo.date_start,
                     pp.id,
-                    mo.product_qty
+                    mo.wo_qty,
+                    mo.production_qty
             )
         """)
 
