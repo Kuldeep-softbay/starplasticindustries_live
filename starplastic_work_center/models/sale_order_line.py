@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class SaleOrderLine(models.Model):
@@ -12,3 +12,18 @@ class SaleOrderLine(models.Model):
         string='WO Qty',
         help='Work Order Quantity for this line'
     )
+
+    product_attribute = fields.Char(
+        string="Attribute",
+        compute="_compute_product_attribute",
+        store=True
+    )
+
+    @api.depends('product_id')
+    def _compute_product_attribute(self):
+        for line in self:
+            if line.product_id:
+                attrs = line.product_id.product_template_attribute_value_ids.mapped('name')
+                line.product_attribute = ", ".join(attrs)
+            else:
+                line.product_attribute = ""

@@ -7,19 +7,23 @@
         <field name="arch" type="xml">
 
             <!-- Add CO Number in Order Lines (list view) -->
-            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']"
-                   position="after">
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="after">
                 <field name="co_number" optional="show"/>
                 <field name="wo_qty" optional="show"/>
             </xpath>
 
             <!-- (Optional) Also add in popup form -->
-            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']"
-                   position="after">
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="after">
                 <field name="co_number"/>
                 <field name="wo_qty"/>
             </xpath>
 
+            <xpath expr="//field[@name='order_line']/list/field[@name='product_uom_qty']" position="before">
+                   <field name="product_attribute" string="Color"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="before">
+                   <field name="product_attribute" string="Color"/>
+            </xpath>
         </field>
     </record>
 

@@ -11,9 +11,9 @@ class WCShiftTemplate(models.Model):
 
     name = fields.Char(required=True)
     code = fields.Selection(
-        [('F', 'F'), ('S', 'S'), ('T', 'T')],
+        [('F', 'A'), ('S', 'B'), ('T', 'C')],
         required=True,
-        help="Short code for the shift (F/S/T)."
+        help="Short code for the shift (A/B/C)."
     )
     start_hour = fields.Integer(string='Start Hour (0-23)', required=True)
     duration_hours = fields.Integer(string='Duration (hours)', default=8, required=True)

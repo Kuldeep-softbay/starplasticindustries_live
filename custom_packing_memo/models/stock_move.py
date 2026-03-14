@@ -18,12 +18,12 @@ class StockMove(models.Model):
 
     @api.depends('product_id')
     def _compute_product_grade(self):
-        for move in self:
-            grade = ''
-            if move.product_id:
-                values = move.product_id.product_template_variant_value_ids
-                grade = ", ".join(values.mapped('name'))
-            move.product_grade = grade
+        for line in self:
+            if line.product_id:
+                attrs = line.product_id.product_template_attribute_value_ids.mapped('name')
+                line.product_grade = ", ".join(attrs)
+            else:
+                line.product_grade = ""
 
     @api.depends('picking_id')
     def _compute_rm_formulation(self):
@@ -75,8 +75,11 @@ class StockMoveLine(models.Model):
         store=False
     )
 
+    @api.depends('product_id')
     def _compute_product_grade(self):
         for line in self:
-            values = line.product_id.product_template_variant_value_ids
-            line.product_grade = ", ".join(values.mapped('name'))
-            
+            if line.product_id:
+                attrs = line.product_id.product_template_attribute_value_ids.mapped('name')
+                line.product_grade = ", ".join(attrs)
+            else:
+                line.product_grade = ""

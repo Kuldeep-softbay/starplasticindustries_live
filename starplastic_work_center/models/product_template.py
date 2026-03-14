@@ -44,6 +44,20 @@ class ProductTemplate(models.Model):
     digits=(16, 4)
     )
 
+    attribute_values_display = fields.Char(
+        string="Attributes",
+        compute="_compute_attribute_values_display",
+        store=False
+    )
+
+    @api.depends('attribute_line_ids.value_ids')
+    def _compute_attribute_values_display(self):
+        for product in self:
+            values = []
+            for line in product.attribute_line_ids:
+                values.extend(line.value_ids.mapped('name'))
+            product.attribute_values_display = ", ".join(values)
+
 
     @api.depends('weight_gm')
     def _compute_weight_from_gm(self):
