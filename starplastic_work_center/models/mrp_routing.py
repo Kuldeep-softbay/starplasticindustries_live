@@ -8,6 +8,8 @@ class MrpRoutingWorkcenter(models.Model):
     name = fields.Char(string="Mould Name")
     workcenter_ids = fields.Many2many(
         'mrp.workcenter',
+        'mrp_routing_workcenter_machine_rel',
+        'routing_workcenter_id',
         'workcenter_id',
         string="Suitable Machines"
     )

@@ -8,7 +8,8 @@ class MrpWorkorder(models.Model):
     
     workcenter_id = fields.Many2one(
         'mrp.workcenter',
-        string="Suitable Machine"
+        string="Suitable Machine",
+        domain="[('id','in', allowed_workcenter_ids)]"
     )
     batch_number = fields.Char('Batch Number')
     expected_delivery_date = fields.Datetime('Expected Delivery Date')
@@ -30,6 +31,21 @@ class MrpWorkorder(models.Model):
         store=True,
         readonly=True
     )
+
+    allowed_workcenter_ids = fields.Many2many(
+        'mrp.workcenter',
+        string="Allowed Machines",
+        compute="_compute_allowed_workcenters",
+        store=False
+    )
+
+    @api.depends('operation_id')
+    def _compute_allowed_workcenters(self):
+        for rec in self:
+            if rec.operation_id:
+                rec.allowed_workcenter_ids = rec.operation_id.workcenter_ids
+            else:
+                rec.allowed_workcenter_ids = False
     @api.depends(
         "qty_production",
         "operation_id",

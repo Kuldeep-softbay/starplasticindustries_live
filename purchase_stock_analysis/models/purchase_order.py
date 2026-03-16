@@ -34,3 +34,32 @@ class PurchaseOrderLine(models.Model):
                 line.product_grade = ", ".join(attrs)
             else:
                 line.product_grade = ""
+
+class ProductProduct(models.Model):
+    _inherit = "product.product"
+
+    def _get_grade_value(self):
+        """Helper method to fetch Grade attribute value"""
+        self.ensure_one()
+        for line in self.product_tmpl_id.attribute_line_ids:
+            if line.attribute_id.name == "Grade":
+                return ", ".join(line.value_ids.mapped("name"))
+        return False
+
+    def name_get(self):
+        result = []
+        for product in self:
+            name = product.name
+            grade = product._get_grade_value()
+
+            if grade:
+                name = f"{name} [{grade}]"
+
+            result.append((product.id, name))
+        return result
+
+    @api.model
+    def name_search(self, name="", args=None, operator="ilike", limit=100):
+        args = args or []
+        products = self.search([('name', operator, name)] + args, limit=limit)
+        return products.name_get()
